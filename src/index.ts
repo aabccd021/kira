@@ -1,3 +1,3 @@
-console.log('a');
+console.log("a");
 
-export function x (){}
+export function x() {}
