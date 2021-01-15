@@ -1,3 +1,5 @@
-console.log("a");
+function helloWorld() {
+  console.log("Hello World");
+}
 
-export function x() {}
+helloWorld();
