@@ -1,5 +1,6 @@
-function helloWorld() {
-  console.log('Hello World');
+export function helloWorld(x: number): number {
+  return x + 1;
 }
 
-helloWorld();
+const result = helloWorld(2);
+console.log(result);
