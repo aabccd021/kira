@@ -3,6 +3,11 @@
   "version": "0.1.0",
   "license": "MIT",
   "author": "Muhamad Abdurahman <aabccd021@gmail.com>",
+  "scripts": {
+    "build": "tsc",
+    "lint": "eslint '**/*.ts'",
+    "lint:fix": "eslint --fix '**/*.ts'"
+  },
   "devDependencies": {
     "@types/node": "^14.14.21",
     "@typescript-eslint/eslint-plugin": "^4.13.0",
