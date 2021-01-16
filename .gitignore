@@ -16,3 +16,7 @@ lib/
 
 # Yarn
 yarn-error.log
+
+# Coverage output
+.nyc_output
+coverage/

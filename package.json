@@ -7,7 +7,10 @@
     "build": "tsc",
     "lint": "eslint '**/*.ts'",
     "lint:fix": "eslint --fix '**/*.ts'",
-    "test": "mocha --require ts-node/register 'test/**/*.test.ts'"
+    "test": "mocha --require ts-node/register 'test/**/*.test.ts'",
+    "test:coverage": "nyc yarn test",
+    "test:coverage:json": "nyc --reporter=json yarn test",
+    "test:coverage:lcov": "nyc --reporter=lcov yarn test"
   },
   "devDependencies": {
     "@types/chai": "^4.2.14",
@@ -20,6 +23,7 @@
     "eslint-config-prettier": "^7.1.0",
     "eslint-plugin-prettier": "^3.3.1",
     "mocha": "^8.2.1",
+    "nyc": "^15.1.0",
     "ts-node": "^9.1.1",
     "typescript": "^4.1.3"
   },
