@@ -11,6 +11,7 @@
     "build": "tsc",
     "lint": "eslint '**/*.ts'",
     "lint:fix": "eslint --fix '**/*.ts'",
+    "lint:editorconfig": "editorconfig-checker",
     "test": "mocha --require ts-node/register 'test/**/*.test.ts'",
     "test:coverage": "nyc --reporter=json --reporter=text --reporter=text-summary yarn test"
   },
@@ -21,6 +22,7 @@
     "@typescript-eslint/eslint-plugin": "^4.13.0",
     "@typescript-eslint/parser": "^4.13.0",
     "chai": "^4.2.0",
+    "editorconfig-checker": "^3.3.0",
     "eslint": "^7.17.0",
     "eslint-config-prettier": "^7.1.0",
     "eslint-plugin-prettier": "^3.3.1",
