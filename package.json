@@ -1,22 +1,48 @@
 {
   "name": "kira",
-  "version": "0.1.0",
+  "version": "0.0.0-development",
   "license": "MIT",
   "author": "Muhamad Abdurahman <aabccd021@gmail.com>",
+  "engines": {
+    "node": "10.x",
+    "npm": "please-use-yarn"
+  },
+  "scripts": {
+    "build": "tsc",
+    "lint": "eslint '**/*.ts'",
+    "lint:fix": "eslint --fix '**/*.ts'",
+    "lint:editorconfig": "editorconfig-checker",
+    "test": "mocha --require ts-node/register 'test/**/*.test.ts'",
+    "test:coverage": "nyc --reporter=json --reporter=text --reporter=text-summary yarn test",
+    "semantic-release": "semantic-release"
+  },
   "devDependencies": {
+    "@types/chai": "^4.2.14",
+    "@types/mocha": "^8.2.0",
     "@types/node": "^14.14.21",
     "@typescript-eslint/eslint-plugin": "^4.13.0",
     "@typescript-eslint/parser": "^4.13.0",
+    "chai": "^4.2.0",
+    "editorconfig-checker": "^3.3.0",
     "eslint": "^7.17.0",
     "eslint-config-prettier": "^7.1.0",
-    "eslint-config-standard": "^16.0.2",
-    "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-prettier": "^3.3.1",
-    "eslint-plugin-promise": "^4.2.1",
-    "eslint-plugin-unused-imports": "^1.0.1",
-    "prettier": "^2.2.1",
+    "mocha": "^8.2.1",
+    "nyc": "^15.1.0",
     "ts-node": "^9.1.1",
-    "typescript": "^4.1.3"
+    "typescript": "^4.1.3",
+    "semantic-release": "^17.3.3"
+  },
+  "dependencies": {
+    "prettier": "^2.2.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aabccd021/kira.git"
+  },
+  "release": {
+    "branches": [
+      "main"
+    ]
   }
 }
