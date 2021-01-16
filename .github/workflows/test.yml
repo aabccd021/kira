@@ -1,7 +1,10 @@
-name: Main Workflow
-on: [push]
+name: Run Tests
+on:
+  push:
+    branches-ignore:
+      - main
 jobs:
-  CI:
+  run_test:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
