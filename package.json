@@ -39,5 +39,10 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/aabccd021/kira.git"
+  },
+  "release": {
+    "branches": [
+      "main"
+    ]
   }
 }
