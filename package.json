@@ -14,8 +14,9 @@
     "lint:editorconfig": "editorconfig-checker",
     "lint:fix": "eslint --fix '**/*.ts'",
     "semantic-release": "semantic-release",
-    "test": "mocha --require ts-node/register 'test/**/*.test.ts'",
-    "test:coverage": "nyc --reporter=json --reporter=text --reporter=text-summary yarn test"
+    "test": "yarn test:types && mocha --require ts-node/register 'test/**/*.test.ts'",
+    "test:coverage": "nyc --reporter=json --reporter=text --reporter=text-summary yarn test",
+    "test:types": "tsc --noEmit"
   },
   "husky": {
     "hooks": {
