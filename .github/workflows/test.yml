@@ -4,8 +4,8 @@ on:
     branches-ignore:
       - main
 jobs:
-  test:
-    name: Test
+  test_and_coverage:
+    name: Test and Upload Coverage
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -16,5 +16,11 @@ jobs:
           node-version: "10.x"
       - name: Install dependencies
         run: yarn --frozen-lockfile
-      - name: Run test
-        run: yarn test
+      - name: Run test and generate coverage
+        run: yarn test:coverage
+      - name: Upload coverage to Code Climate
+        uses: paambaati/codeclimate-action@v2.7.5
+        env:
+          CC_TEST_REPORTER_ID: ${{secrets.CC_TEST_REPORTER_ID}}
+        with:
+          coverageLocations: ${{github.workspace}}/coverage/lcov.info:lcov
