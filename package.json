@@ -12,8 +12,7 @@
     "lint": "eslint '**/*.ts'",
     "lint:fix": "eslint --fix '**/*.ts'",
     "test": "mocha --require ts-node/register 'test/**/*.test.ts'",
-    "test:coverage": "nyc --reporter=json --reporter=text --reporter=text-summary yarn test",
-    "test:coverage:lcov": "nyc --reporter=lcov yarn test"
+    "test:coverage": "nyc --reporter=json --reporter=text --reporter=text-summary yarn test"
   },
   "devDependencies": {
     "@types/chai": "^4.2.14",
