@@ -17,7 +17,9 @@ jobs:
       run: yarn --frozen-lockfile
     - name: Run test and generate coverage
       run: yarn test:coverage
-    - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v1
+    - name: Upload coverage to Code Climate
+      uses: paambaati/codeclimate-action@v2.7.5
+      env:
+        CC_TEST_REPORTER_ID: ${{secrets.CC_TEST_REPORTER_ID}}
       with:
-        files: ./coverage/coverage-final.json
+        coverageLocations: ${{github.workspace}}/coverage/lcov.info:lcov
