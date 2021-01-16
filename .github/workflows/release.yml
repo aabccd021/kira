@@ -4,7 +4,7 @@ on:
     branches:
       - main
 jobs:
-  run_test_and_release:
+  test:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
@@ -25,7 +25,11 @@ jobs:
         CC_TEST_REPORTER_ID: ${{secrets.CC_TEST_REPORTER_ID}}
       with:
         coverageLocations: ${{github.workspace}}/coverage/lcov.info:lcov
-    - name: Release
+  release:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+    - name: Release with semantic-release
       env:
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
         NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
