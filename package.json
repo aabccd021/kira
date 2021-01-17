@@ -40,6 +40,44 @@
       "path": "./node_modules/cz-conventional-changelog"
     }
   },
+  "eslintConfig": {
+    "env": {
+      "es2021": true,
+      "node": true
+    },
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+      "sourceType": "module"
+    },
+    "plugins": [
+      "@typescript-eslint",
+      "unused-imports"
+    ],
+    "extends": [
+      "eslint:recommended",
+      "plugin:@typescript-eslint/recommended",
+      "plugin:prettier/recommended",
+      "prettier/@typescript-eslint"
+    ],
+    "rules": {
+      "max-len": [
+        "error",
+        {
+          "code": 120,
+          "comments": 120
+        }
+      ],
+      "multiline-comment-style": "error",
+      "@typescript-eslint/no-unused-vars": "off",
+      "prettier/prettier": [
+        "error",
+        {
+          "singleQuote": true
+        }
+      ],
+      "unused-imports/no-unused-imports-ts": "error"
+    }
+  },
   "devDependencies": {
     "@types/chai": "^4.2.14",
     "@types/mocha": "^8.2.0",
