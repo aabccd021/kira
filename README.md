@@ -5,3 +5,11 @@
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](LICENSE)
 
 Feature as code
+
+# Concepts
+An app consist of collections.
+A collection consist of fields.
+A field has attributes.
+
+# Field
+Field must not consist of non-compatible attributes.

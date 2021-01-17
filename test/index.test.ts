@@ -1,13 +1,9 @@
-import { notStrictEqual, strictEqual } from 'assert';
-import { helloWorld } from '../src/index';
+import { expect } from 'chai';
+import { helloWorld } from '../src';
 
-describe('helloWorld', () => {
-  it('should return 2', () => {
+describe('Hello world', () => {
+  it('returns 2 if given 1', () => {
     const result = helloWorld(1);
-    strictEqual(result, 2);
-  });
-  it('should not return 3', () => {
-    const result = helloWorld(1);
-    notStrictEqual(result, 3);
+    expect(result).to.equal(2);
   });
 });
