@@ -14,14 +14,25 @@
     "sourceType": "module"
   },
   "plugins": [
-    "@typescript-eslint"
+    "@typescript-eslint",
+    "unused-imports"
   ],
   "rules": {
+    "@typescript-eslint/no-unused-vars": "off",
+    "max-len": [
+      "error",
+      {
+        "code": 120,
+        "comments": 120
+      }
+    ],
+    "multiline-comment-style": "error",
     "prettier/prettier": [
       "error",
       {
         "singleQuote": true
       }
-    ]
+    ],
+    "unused-imports/no-unused-imports-ts": "error"
   }
 }
