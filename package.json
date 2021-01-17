@@ -10,7 +10,7 @@
   "main": "./lib/index.js",
   "types": "./lib/index.d.js",
   "files:": [
-    "./lib"
+    "/lib"
   ],
   "scripts": {
     "build": "tsc",
