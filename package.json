@@ -9,7 +9,7 @@
   "author": "Muhamad Abdurahman <aabccd021@gmail.com>",
   "main": "./lib/index.js",
   "types": "./lib/index.d.js",
-  "files:": [
+  "files": [
     "lib/*"
   ],
   "scripts": {
