@@ -15,6 +15,8 @@
   "scripts": {
     "build": "tsc",
     "commit": "cz",
+    "doc:generate": "typedoc --out docs src/fields",
+    "doc:watch": "typedoc --watch --out docs src/fields",
     "lint": "eslint '**/*.ts'",
     "lint:fix": "eslint --fix '**/*.ts'",
     "semantic-release": "semantic-release",
@@ -101,6 +103,7 @@
     "semantic-release": "^17.3.3",
     "ts-node": "^9.1.1",
     "typedoc": "^0.20.19",
+    "typedoc-plugin-markdown": "^3.4.3",
     "typescript": "^4.1.3"
   },
   "engines": {
