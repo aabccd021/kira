@@ -1,38 +1,77 @@
+import { isNil, some } from 'lodash';
+import pluralize from 'pluralize';
+import { Field, schema2Field, SchemaField } from './field';
+
+export type MigrationInstance = {
+  migrations: Migration[];
+};
+
+export type Migration = CreateCollection | CreateField;
+
+export type CollectionMap = { [name: string]: Collection };
+export type SchemaCollectionMap = { [name: string]: SchemaCollection };
+export type FieldMap = { [name: string]: Field };
+export type SchemaFieldMap = { [name: string]: SchemaField };
+
+/**
+ * Kira Collection
+ */
+
+export type Collection = {
+  singularName: string;
+  fields: FieldMap;
+};
+export type SchemaCollection = {
+  singularName: string;
+  fields: SchemaFieldMap;
+};
+
 export type CreateCollection = {
-  migrationType: 'createCollection';
+  type: 'createCollection';
   collectionName: string;
+  singularName?: string;
 };
 
-export type UpdateCollectionName = {
-  migrationType: 'updateCollectionName';
-  collectionName: string;
-};
+export function onCreateCollection(
+  collectionMap: CollectionMap,
+  migration: CreateCollection
+): CollectionMap {
+  const { collectionName, singularName } = migration;
 
-export type DeleteCollection = {
-  migrationType: 'deleteCollection';
-  collectionName: string;
-};
+  const collection = collectionMap[collectionName];
+  if (!isNil(collection)) throw Error(`Collection ${collectionName} already exists`);
+
+  const newSingularName = singularName ?? pluralize.singular(collectionName);
+  const duplicateSingularNameFound = some(
+    collectionMap,
+    ({ singularName }) => singularName === newSingularName
+  );
+  if (duplicateSingularNameFound) throw Error(`Duplicate singular name found: ${newSingularName}`);
+
+  const newCollection: Collection = { fields: {}, singularName: newSingularName };
+  return { ...collectionMap, [collectionName]: newCollection };
+}
 
 export type CreateField = {
-  migrationType: 'createField';
+  type: 'createField';
   collectionName: string;
   fieldName: string;
+  field: SchemaField;
 };
 
-export type UpdateFieldType = {
-  migrationType: 'updateFieldType';
-  collectionName: string;
-  fieldName: string;
-};
+export function onCreateField(collectionMap: CollectionMap, migration: CreateField): CollectionMap {
+  const { collectionName, fieldName, field: schemaField } = migration;
 
-export type UpdateFieldName = {
-  migrationType: 'updateFieldName';
-  collectionName: string;
-  fieldName: string;
-};
+  const collection = collectionMap[collectionName];
+  if (isNil(collection)) throw Error(`Collection ${collectionName} does not exist`);
 
-export type DeleteField = {
-  migrationType: 'deleteField';
-  collectionName: string;
-  fieldName: string;
-};
+  const { fields } = collection;
+  if (!isNil(fields[fieldName])) {
+    throw Error(`Field ${fieldName} already exists on collection ${collectionName}`);
+  }
+
+  const field = schema2Field(schemaField, collectionMap);
+  const newFields: FieldMap = { ...fields, [fieldName]: field };
+  const newCollection: Collection = { ...collection, fields: newFields };
+  return { ...collectionMap, [collectionName]: newCollection };
+}

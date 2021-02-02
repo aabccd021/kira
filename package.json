@@ -63,28 +63,41 @@
     ],
     "rules": {
       "max-len": [
-        "error",
+        "warn",
         {
-          "code": 120,
-          "comments": 120
+          "code": 100,
+          "comments": 100
         }
       ],
-      "multiline-comment-style": "error",
+      "multiline-comment-style": "warn",
       "@typescript-eslint/no-unused-vars": "off",
       "prettier/prettier": [
-        "error",
+        "warn",
         {
-          "singleQuote": true
+          "singleQuote": true,
+          "printWidth": 100
         }
       ],
-      "unused-imports/no-unused-imports-ts": "error"
+      "unused-imports/no-unused-imports-ts": "warn"
     },
     "ignorePatterns": "lib"
+  },
+  "dependencies": {
+    "@types/json-stable-stringify": "^1.0.32",
+    "@types/lodash": "^4.14.168",
+    "@types/pluralize": "^0.0.29",
+    "json-stable-stringify": "^1.0.1",
+    "jsonschema": "^1.4.0",
+    "lodash": "^4.17.20",
+    "pluralize": "^8.0.0",
+    "ts-json-schema-generator": "^0.83.2",
+    "semver": "^7.3.4"
   },
   "devDependencies": {
     "@types/chai": "^4.2.14",
     "@types/mocha": "^8.2.0",
     "@types/node": "^14.14.21",
+    "@types/semver": "^7.3.4",
     "@typescript-eslint/eslint-plugin": "^4.13.0",
     "@typescript-eslint/parser": "^4.13.0",
     "assert-never": "^1.2.1",

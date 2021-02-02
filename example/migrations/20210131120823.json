@@ -1,0 +1,17 @@
+{
+  "$schema": "../../migration-schema/v0.1.0.json",
+  "migrations": [
+    {
+      "type": "createCollection",
+      "collectionName": "users"
+    },
+    {
+      "type": "createField",
+      "collectionName": "users",
+      "fieldName": "userName",
+      "field": {
+        "type": "string"
+      }
+    }
+  ]
+}

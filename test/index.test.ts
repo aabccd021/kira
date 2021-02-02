@@ -1,9 +1,7 @@
-import { expect } from 'chai';
-import { helloWorld } from '../src';
+import { migrate } from '../src/migrate';
 
 describe('Hello world', () => {
   it('returns 2 if given 1', () => {
-    const result = helloWorld(1);
-    expect(result).to.equal(2);
+    const result = migrate();
   });
 });

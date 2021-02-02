@@ -4,13 +4,25 @@
     {
       "type": "pwa-node",
       "request": "launch",
-      "name": "Launch Program",
+      "name": "Run Migration",
       "runtimeArgs": [
         "-r",
         "ts-node/register"
       ],
       "args": [
-        "${workspaceFolder}/src/index.ts"
+        "${workspaceFolder}/src/migrate.ts"
+      ],
+    },
+    {
+      "type": "pwa-node",
+      "request": "launch",
+      "name": "Generate JSON Schema",
+      "runtimeArgs": [
+        "-r",
+        "ts-node/register"
+      ],
+      "args": [
+        "${workspaceFolder}/src/generate-json-schema/generate-json-schema.ts"
       ],
     }
   ]

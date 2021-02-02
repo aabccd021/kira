@@ -1,6 +1,9 @@
-import { ArrayOr, integer } from '../utils';
+import { integer } from './../utils';
+import { Controller } from '../field';
+import { CollectionMap } from '../migration';
+import { ArrayOr } from '../utils';
 
-export type StringField = {
+export type SchemaStringField = {
   /** @ignore */
   type: 'string';
   /** Minimum length of this string, inclusive. */
@@ -12,3 +15,18 @@ export type StringField = {
 };
 
 type StringFieldProperties = 'isUnique';
+
+export type StringField = SchemaStringField;
+
+export const stringController: Controller<SchemaStringField, StringField> = {
+  schema2Field,
+  field2Schema,
+};
+
+function schema2Field(schemaField: SchemaStringField, _: CollectionMap): StringField {
+  return schemaField;
+}
+
+function field2Schema(field: StringField): SchemaStringField {
+  return field;
+}
