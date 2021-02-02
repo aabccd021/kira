@@ -26,7 +26,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn lint:fix; editorconfig-checker",
+      "pre-commit": "yarn lint:fix",
       "prepare-commit-msg": "exec < /dev/tty && git cz --hook || true",
       "pre-push": "yarn test"
     }
@@ -103,7 +103,6 @@
     "assert-never": "^1.2.1",
     "chai": "^4.2.0",
     "cz-conventional-changelog": "3.3.0",
-    "editorconfig-checker": "^3.3.0",
     "eslint": "^7.17.0",
     "eslint-config-prettier": "^7.1.0",
     "eslint-plugin-prettier": "^3.3.1",
