@@ -1,5 +1,5 @@
 import { flatten, fromPairs, isNil, keys } from 'lodash';
-import { Controller, Field } from '../field';
+import { FieldController, Field } from '../field';
 import { CollectionMap } from '../migration';
 import { ArrayOr } from '../utils';
 
@@ -20,7 +20,7 @@ export type ReferenceField = Omit<SchemaReferenceField, 'referenceSyncedFields'>
   referenceSyncedFields: { [fieldName: string]: Exclude<Field, ReferenceField> };
 };
 
-export const referenceController: Controller<SchemaReferenceField, ReferenceField> = {
+export const referenceController: FieldController<SchemaReferenceField, ReferenceField> = {
   schema2Field,
   field2Schema,
 };

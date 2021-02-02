@@ -30,8 +30,7 @@ export function migrate(): CollectionMap {
 
 function collectionMap2Schema(collectionMap: CollectionMap): SchemaCollectionMap {
   const schemaCollectionPairs = mapValues(collectionMap, (collection) => {
-    const { fields } = collection;
-    const schemaFields = mapValues(fields, field2Schema);
+    const schemaFields = mapValues(collection.fields, field2Schema);
     const schemaCollection: SchemaCollection = { ...collection, fields: schemaFields };
     return schemaCollection;
   });

@@ -1,4 +1,4 @@
-import { Controller } from '../field';
+import { FieldController } from '../field';
 import { CollectionMap } from '../migration';
 
 export type SchemaServerTimestampField = {
@@ -7,7 +7,7 @@ export type SchemaServerTimestampField = {
 
 export type ServerTimestampField = SchemaServerTimestampField;
 
-export const serverTimestampController: Controller<
+export const serverTimestampController: FieldController<
   SchemaServerTimestampField,
   ServerTimestampField
 > = {

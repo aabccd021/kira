@@ -1,5 +1,5 @@
 import { integer } from './../utils';
-import { Controller } from '../field';
+import { FieldController } from '../field';
 import { CollectionMap } from '../migration';
 import { ArrayOr } from '../utils';
 
@@ -18,7 +18,7 @@ type StringFieldProperties = 'isUnique';
 
 export type StringField = SchemaStringField;
 
-export const stringController: Controller<SchemaStringField, StringField> = {
+export const stringController: FieldController<SchemaStringField, StringField> = {
   schema2Field,
   field2Schema,
 };

@@ -1,7 +1,7 @@
 import { IntegerField } from './integer';
 import { CollectionMap } from './../migration';
 import { ReferenceField } from './reference';
-import { Controller } from '../field';
+import { FieldController } from '../field';
 import { isNil } from 'lodash';
 /** Sum value of certain field of document which refers to this document */
 export type SchemaSumField = {
@@ -28,7 +28,7 @@ export type SumField = SchemaSumField & {
   sumField: IntegerField;
 };
 
-export const sumController: Controller<SchemaSumField, SumField> = {
+export const sumController: FieldController<SchemaSumField, SumField> = {
   schema2Field,
   field2Schema,
 };

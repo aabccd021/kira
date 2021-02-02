@@ -1,5 +1,5 @@
 import { isNil } from 'lodash';
-import { Controller } from '../field';
+import { FieldController } from '../field';
 import { CollectionMap } from './../migration';
 import { ReferenceField } from './reference';
 
@@ -22,7 +22,7 @@ export type CountField = SchemaCountField & {
   referenceField: ReferenceField;
 };
 
-export const countController: Controller<SchemaCountField, CountField> = {
+export const countController: FieldController<SchemaCountField, CountField> = {
   schema2Field,
   field2Schema,
 };

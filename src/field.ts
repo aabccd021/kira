@@ -1,14 +1,18 @@
 import { CollectionMap } from './migration';
-import { countController, CountField, SchemaCountField } from './fields/count';
-import { integerController, IntegerField, SchemaIntegerField } from './fields/integer';
-import { referenceController, ReferenceField, SchemaReferenceField } from './fields/reference';
+import { countController as count, CountField, SchemaCountField } from './fields/count';
+import { integerController as integer, IntegerField, SchemaIntegerField } from './fields/integer';
+import {
+  referenceController as reference,
+  ReferenceField,
+  SchemaReferenceField,
+} from './fields/reference';
 import {
   SchemaServerTimestampField,
-  serverTimestampController,
+  serverTimestampController as serverTimestamp,
   ServerTimestampField,
 } from './fields/server-timestamp';
-import { SchemaStringField, stringController, StringField } from './fields/string';
-import { SchemaSumField, sumController, SumField } from './fields/sum';
+import { SchemaStringField, stringController as string, StringField } from './fields/string';
+import { SchemaSumField, sumController as sum, SumField } from './fields/sum';
 import assertNever from 'assert-never';
 
 /**
@@ -33,32 +37,27 @@ export type Field =
   | StringField
   | SumField;
 
-export type Controller<S extends SchemaField, F extends Field> = {
+export type FieldController<S extends SchemaField = SchemaField, F extends Field = Field> = {
   schema2Field: (schema: S, collectionMap: CollectionMap) => F;
   field2Schema: (field: F) => S;
 };
 
-export function schema2Field(schemaField: SchemaField, collectionMap: CollectionMap): Field {
-  if (schemaField.type === 'count') return countController.schema2Field(schemaField, collectionMap);
-  if (schemaField.type === 'integer')
-    return integerController.schema2Field(schemaField, collectionMap);
-  if (schemaField.type === 'reference')
-    return referenceController.schema2Field(schemaField, collectionMap);
-  if (schemaField.type === 'serverTimestamp')
-    return serverTimestampController.schema2Field(schemaField, collectionMap);
-  if (schemaField.type === 'string')
-    return stringController.schema2Field(schemaField, collectionMap);
-  if (schemaField.type === 'sum') return sumController.schema2Field(schemaField, collectionMap);
-  assertNever(schemaField);
+export function schema2Field(field: SchemaField, collectionMap: CollectionMap): Field {
+  if (field.type === 'count') return count.schema2Field(field, collectionMap);
+  if (field.type === 'integer') return integer.schema2Field(field, collectionMap);
+  if (field.type === 'reference') return reference.schema2Field(field, collectionMap);
+  if (field.type === 'serverTimestamp') return serverTimestamp.schema2Field(field, collectionMap);
+  if (field.type === 'string') return string.schema2Field(field, collectionMap);
+  if (field.type === 'sum') return sum.schema2Field(field, collectionMap);
+  assertNever(field);
 }
 
-export function field2Schema(schemaField: Field): SchemaField {
-  if (schemaField.type === 'count') return countController.field2Schema(schemaField);
-  if (schemaField.type === 'integer') return integerController.field2Schema(schemaField);
-  if (schemaField.type === 'reference') return referenceController.field2Schema(schemaField);
-  if (schemaField.type === 'serverTimestamp')
-    return serverTimestampController.field2Schema(schemaField);
-  if (schemaField.type === 'string') return stringController.field2Schema(schemaField);
-  if (schemaField.type === 'sum') return sumController.field2Schema(schemaField);
-  assertNever(schemaField);
+export function field2Schema(field: Field): SchemaField {
+  if (field.type === 'count') return count.field2Schema(field);
+  if (field.type === 'integer') return integer.field2Schema(field);
+  if (field.type === 'reference') return reference.field2Schema(field);
+  if (field.type === 'serverTimestamp') return serverTimestamp.field2Schema(field);
+  if (field.type === 'string') return string.field2Schema(field);
+  if (field.type === 'sum') return sum.field2Schema(field);
+  assertNever(field);
 }

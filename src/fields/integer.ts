@@ -1,4 +1,4 @@
-import { Controller } from '../field';
+import { FieldController } from '../field';
 import { CollectionMap } from '../migration';
 import { integer } from '../utils';
 
@@ -15,7 +15,7 @@ export type SchemaIntegerField = {
 
 export type IntegerField = SchemaIntegerField;
 
-export const integerController: Controller<SchemaIntegerField, IntegerField> = {
+export const integerController: FieldController<SchemaIntegerField, IntegerField> = {
   schema2Field,
   field2Schema,
 };
