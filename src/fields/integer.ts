@@ -1,5 +1,5 @@
+import { isNil } from 'lodash';
 import { FieldController } from '../field';
-import { CollectionMap } from '../migration/migration';
 import { integer } from '../utils';
 
 export type SchemaIntegerField = {
@@ -9,8 +9,6 @@ export type SchemaIntegerField = {
   min?: integer;
   /** Maximum value of this integer, inclusive. */
   max?: integer;
-  /** This document will be deleted if this integer equals this value. */
-  deleteDocWhen?: integer;
 };
 
 export type IntegerField = SchemaIntegerField;
@@ -20,7 +18,9 @@ export const integerController: FieldController<SchemaIntegerField, IntegerField
   field2Schema,
 };
 
-function schema2Field(schemaField: SchemaIntegerField, _: CollectionMap): IntegerField {
+function schema2Field(schemaField: SchemaIntegerField): IntegerField {
+  const { min, max } = schemaField;
+  if (!isNil(min) && !isNil(max) && max < min) throw Error('max must be greater than min');
   return schemaField;
 }
 

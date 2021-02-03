@@ -8,10 +8,12 @@ export type SchemaReferenceField = {
   type: 'reference';
   /**
    * Name of collection of referenced document.
+   * @minLength 1
    */
   referenceCollectionName: string;
   /**
    * Name of fields to be synced.
+   * @minLength 1
    */
   referenceSyncedFields: ArrayOr<string>;
 };

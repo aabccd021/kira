@@ -1,14 +1,20 @@
 import { integer } from './../utils';
 import { FieldController } from '../field';
-import { CollectionMap } from '../migration/migration';
 import { ArrayOr } from '../utils';
+import { isNil } from 'lodash';
 
 export type SchemaStringField = {
   /** @ignore */
   type: 'string';
-  /** Minimum length of this string, inclusive. */
+  /**
+   * Minimum length of this string, inclusive.
+   * @minimum 1
+   */
   minLength?: integer;
-  /** Maximum length of this string, inclusive. */
+  /**
+   * Maximum length of this string, inclusive.
+   * @minimum 1
+   */
   maxLength?: integer;
   /** `isUnique`: value of this string field will be unique across collections. */
   properties?: ArrayOr<StringFieldProperties>;
@@ -23,7 +29,18 @@ export const stringController: FieldController<SchemaStringField, StringField> =
   field2Schema,
 };
 
-function schema2Field(schemaField: SchemaStringField, _: CollectionMap): StringField {
+function schema2Field(schemaField: SchemaStringField): StringField {
+  const { minLength, maxLength } = schemaField;
+  if (!isNil(minLength)) {
+    if (minLength === 0) throw Error('minLength 0 does not need to be specified');
+    if (minLength < 0) throw Error(`minLength must be greater than 0, given ${minLength}`);
+  }
+  if (!isNil(maxLength) && maxLength <= 0) {
+    throw Error(`max must be greater than 0, given ${maxLength}`);
+  }
+  if (!isNil(minLength) && !isNil(maxLength) && maxLength < minLength) {
+    throw Error(`maxLength must be greater than minLength`);
+  }
   return schemaField;
 }
 

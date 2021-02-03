@@ -9,11 +9,13 @@ export type SchemaCountField = {
   /**
    * Name of collection of counted document, the collection must have reference to collection of
    * this document.
+   * @minLength 1
    */
   referenceCollectionName: string;
   /**
    * Name of {@link ReferenceField} of counted document, only document that reference document of
    * this field will be counted.
+   * @minLength 1
    */
   referenceFieldName: string;
 };

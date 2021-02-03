@@ -28,7 +28,13 @@ export type SchemaCollection = {
 
 export type CreateCollection = {
   type: 'createCollection';
+  /**
+   * @minLength 1
+   */
   collectionName: string;
+  /**
+   * @minLength 1
+   */
   singularName?: string;
 };
 
@@ -54,7 +60,13 @@ export function onCreateCollection(
 
 export type CreateField = {
   type: 'createField';
+  /**
+   * @minLength 1
+   */
   collectionName: string;
+  /**
+   * @minLength 1
+   */
   fieldName: string;
   field: SchemaField;
 };

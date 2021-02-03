@@ -10,15 +10,18 @@ export type SchemaSumField = {
   /**
    * Name of collection of document of summed field, the collection must have reference to
    * collection of this document.
+   * @minLength 1
    */
   referenceCollectionName: string;
   /**
    * Name of {@link ReferenceField} of document of summed field, only field of document that
    * reference this document will be summed.
+   * @minLength 1
    */
   referenceFieldName: string;
   /**
-   * Name of field to be summed. The field must be {@link SumField}.
+   * Name of field to be summed. The field must be {@link IntegerField}.
+   * @minLength 1
    */
   sumFieldName: string;
 };
