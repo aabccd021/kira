@@ -1,5 +1,5 @@
 import { FieldController } from '../field';
-import { CollectionMap } from '../migration';
+import { CollectionMap } from '../migration/migration';
 import { integer } from '../utils';
 
 export type SchemaIntegerField = {

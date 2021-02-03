@@ -1,4 +1,4 @@
-import { CollectionMap } from './migration';
+import { CollectionMap } from './migration/migration';
 import { countController as count, CountField, SchemaCountField } from './fields/count';
 import { integerController as integer, IntegerField, SchemaIntegerField } from './fields/integer';
 import {

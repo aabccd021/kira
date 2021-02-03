@@ -1,5 +1,5 @@
 import { IntegerField } from './integer';
-import { CollectionMap } from './../migration';
+import { CollectionMap } from '../migration/migration';
 import { ReferenceField } from './reference';
 import { FieldController } from '../field';
 import { isNil } from 'lodash';

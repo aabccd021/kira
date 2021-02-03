@@ -1,6 +1,6 @@
 import { isNil, some } from 'lodash';
 import pluralize from 'pluralize';
-import { Field, schema2Field, SchemaField } from './field';
+import { Field, schema2Field, SchemaField } from '../field';
 
 export type MigrationInstance = {
   migrations: Migration[];

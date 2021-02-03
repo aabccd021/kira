@@ -13,17 +13,5 @@
         "${workspaceFolder}/src/migrate.ts"
       ],
     },
-    {
-      "type": "pwa-node",
-      "request": "launch",
-      "name": "Generate JSON Schema",
-      "runtimeArgs": [
-        "-r",
-        "ts-node/register"
-      ],
-      "args": [
-        "${workspaceFolder}/src/generate-json-schema/generate-json-schema.ts"
-      ],
-    }
   ]
 }

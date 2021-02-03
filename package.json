@@ -17,6 +17,9 @@
     "commit": "cz",
     "doc:generate": "typedoc --out docs src/fields",
     "doc:watch": "typedoc --watch --out docs src/fields",
+    "migration-schema:patch": "ts-node src/migration/generate-json-schema.ts --release-type=patch",
+    "migration-schema:minor": "ts-node src/migration/generate-json-schema.ts --release-type=minor",
+    "migration-schema:major": "ts-node src/migration/generate-json-schema.ts --release-type=major",
     "lint": "eslint '**/*.ts'",
     "lint:fix": "eslint --fix '**/*.ts'",
     "semantic-release": "semantic-release",
@@ -86,12 +89,14 @@
     "@types/json-stable-stringify": "^1.0.32",
     "@types/lodash": "^4.14.168",
     "@types/pluralize": "^0.0.29",
+    "@types/yargs": "^16.0.0",
     "json-stable-stringify": "^1.0.1",
     "jsonschema": "^1.4.0",
     "lodash": "^4.17.20",
     "pluralize": "^8.0.0",
+    "semver": "^7.3.4",
     "ts-json-schema-generator": "^0.83.2",
-    "semver": "^7.3.4"
+    "yargs": "^16.2.0"
   },
   "devDependencies": {
     "@types/chai": "^4.2.14",

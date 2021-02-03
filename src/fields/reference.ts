@@ -1,6 +1,6 @@
 import { flatten, fromPairs, isNil, keys } from 'lodash';
 import { FieldController, Field } from '../field';
-import { CollectionMap } from '../migration';
+import { CollectionMap } from '../migration/migration';
 import { ArrayOr } from '../utils';
 
 export type SchemaReferenceField = {
