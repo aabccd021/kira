@@ -1,4 +1,4 @@
-import { isUndefined } from 'lodash';
+import _ from 'lodash';
 
 import { CollectionMap } from '../migration';
 import { FieldController } from '.';
@@ -40,7 +40,7 @@ function fieldOf(schemaField: SchemaSumField, collectionMap: CollectionMap): Sum
   const referenceField = referenceCollection?.fields[referenceFieldName];
   const sumField = referenceCollection?.fields[sumFieldName];
 
-  if (isUndefined(referenceField)) {
+  if (_.isUndefined(referenceField)) {
     throw Error(
       `Referenced field ${referenceFieldName} does not exists on collection ${referenceCollectionName}`
     );
@@ -48,7 +48,7 @@ function fieldOf(schemaField: SchemaSumField, collectionMap: CollectionMap): Sum
   if (referenceField.type !== 'reference') {
     throw Error(`Referenced field ${referenceFieldName} is not ReferenceField`);
   }
-  if (isUndefined(sumField)) {
+  if (_.isUndefined(sumField)) {
     const message = `Referenced field ${referenceFieldName} does not exists on collection ${referenceCollectionName}`;
     throw Error(message);
   }

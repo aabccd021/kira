@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import stringify from 'json-stable-stringify';
-import { chain, mapValues } from 'lodash';
+import _ from 'lodash';
 
 import { getConfig } from '../config';
 import { toSchema } from '../fields';
@@ -12,7 +12,7 @@ export function handleMigrate(): void {
   const { appSchemaPath } = getConfig();
   const migrationInstances = getMigrationInstances();
 
-  const appSchema = chain(migrationInstances)
+  const appSchema = _.chain(migrationInstances)
     .flatMap(onKey('migrations'))
     .reduce(migrate, {})
     .mapValues(toSchemaCollection)
@@ -22,6 +22,6 @@ export function handleMigrate(): void {
 }
 
 function toSchemaCollection(collection: Collection): SchemaCollection {
-  const fields = mapValues(collection.fields, toSchema);
+  const fields = _.mapValues(collection.fields, toSchema);
   return { ...collection, fields };
 }

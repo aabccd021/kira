@@ -1,4 +1,4 @@
-import { isUndefined } from 'lodash';
+import _ from 'lodash';
 
 import { CollectionMap } from '../migration';
 import { FieldController } from '.';
@@ -31,7 +31,7 @@ export const _count: FieldController<SchemaCountField, CountField> = {
 function fieldOf(schemaField: SchemaCountField, collectionMap: CollectionMap): CountField {
   const { referenceCollectionName, referenceFieldName } = schemaField;
   const referenceField = collectionMap[referenceCollectionName]?.fields[referenceFieldName];
-  if (isUndefined(referenceField)) {
+  if (_.isUndefined(referenceField)) {
     const message = `Referenced field ${referenceFieldName} does not exists on collection ${referenceCollectionName}`;
     throw Error(message);
   }

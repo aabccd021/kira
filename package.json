@@ -62,12 +62,15 @@
       "simple-import-sort",
       "chai-friendly",
       "chai-expect",
-      "no-null"
+      "no-null",
+      "lodash",
+      "only-warn"
     ],
     "extends": [
       "eslint:recommended",
       "plugin:prettier/recommended",
       "plugin:mocha/recommended",
+      "plugin:lodash/recommended",
       "plugin:ts-immutable/recommended",
       "plugin:@typescript-eslint/recommended",
       "prettier/@typescript-eslint"
@@ -76,6 +79,14 @@
       "curly": [
         "warn",
         "multi-line"
+      ],
+      "lodash/chaining": [
+        "warn",
+        "always"
+      ],
+      "lodash/import-scope": [
+        "warn",
+        "full"
       ],
       "eqeqeq": "warn",
       "no-unused-expressions": "off",
@@ -138,8 +149,10 @@
     "eslint-config-prettier": "^7.1.0",
     "eslint-plugin-chai-expect": "^2.2.0",
     "eslint-plugin-chai-friendly": "^0.6.0",
+    "eslint-plugin-lodash": "^7.1.0",
     "eslint-plugin-mocha": "^8.0.0",
     "eslint-plugin-no-null": "^1.0.2",
+    "eslint-plugin-only-warn": "^1.0.2",
     "eslint-plugin-prettier": "^3.3.1",
     "eslint-plugin-simple-import-sort": "^7.0.0",
     "eslint-plugin-ts-immutable": "^0.3.0",

@@ -1,4 +1,4 @@
-import { chain, isUndefined, keys } from 'lodash';
+import _ from 'lodash';
 
 import { CollectionMap } from '../migration';
 import { ArrayOr } from '../utils';
@@ -30,7 +30,7 @@ export const _reference: FieldController<SchemaReferenceField, ReferenceField> =
 function fieldOf(schemaField: SchemaReferenceField, collectionMap: CollectionMap): ReferenceField {
   const { referenceCollectionName, referenceSyncedFields } = schemaField;
   const referenceCollection = collectionMap[referenceCollectionName];
-  const newReferenceSyncedFields = chain(referenceSyncedFields)
+  const newReferenceSyncedFields = _(referenceSyncedFields)
     .flatMap((referenceFieldName) => referenceCollection?.fields[referenceFieldName])
     .mapValues(toSyncedFields)
     .value();
@@ -38,12 +38,12 @@ function fieldOf(schemaField: SchemaReferenceField, collectionMap: CollectionMap
 }
 
 function toSyncedFields(referenceField: Field | undefined): SyncedField {
-  if (isUndefined(referenceField)) throw Error(`Does not exists`);
+  if (_.isUndefined(referenceField)) throw Error(`Does not exists`);
   if (referenceField.type === 'reference') throw Error(`ReferenceField not allowed`);
   return referenceField;
 }
 
 function schemaOf(field: ReferenceField): SchemaReferenceField {
   const { referenceSyncedFields } = field;
-  return { ...field, referenceSyncedFields: keys(referenceSyncedFields) };
+  return { ...field, referenceSyncedFields: _.keys(referenceSyncedFields) };
 }

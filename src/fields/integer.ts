@@ -1,4 +1,4 @@
-import { isUndefined } from 'lodash';
+import _ from 'lodash';
 
 import { integer } from '../utils';
 import { FieldController } from '.';
@@ -21,7 +21,7 @@ export const _integer: FieldController<SchemaIntegerField, IntegerField> = {
 
 function fieldOf(schemaField: SchemaIntegerField): IntegerField {
   const { min, max } = schemaField;
-  if (!isUndefined(min) && !isUndefined(max) && max < min) {
+  if (!_.isUndefined(min) && !_.isUndefined(max) && max < min) {
     throw Error('max must be greater than min');
   }
   return schemaField;

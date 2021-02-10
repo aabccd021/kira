@@ -1,4 +1,4 @@
-import { isUndefined } from 'lodash';
+import _ from 'lodash';
 
 import { SchemaField, toField } from '../fields';
 import { Collection, CollectionMap, FieldMap } from '.';
@@ -14,10 +14,10 @@ export function createField(collectionMap: CollectionMap, migration: CreateField
   const { collectionName, fieldName, field: schemaField } = migration;
 
   const collection = collectionMap[collectionName];
-  if (isUndefined(collection)) throw Error(`Collection ${collectionName} does not exist`);
+  if (_.isUndefined(collection)) throw Error(`Collection ${collectionName} does not exist`);
 
   const { fields } = collection;
-  if (!isUndefined(fields[fieldName])) {
+  if (!_.isUndefined(fields[fieldName])) {
     throw Error(`Field ${fieldName} already exists on collection ${collectionName}`);
   }
 

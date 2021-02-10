@@ -1,4 +1,4 @@
-import { isUndefined } from 'lodash';
+import _ from 'lodash';
 
 import { Collection, CollectionMap } from '.';
 
@@ -14,7 +14,7 @@ export function createCollection(
   const { collectionName: newCollectionName } = migration;
 
   const collection = collectionMap[newCollectionName];
-  if (!isUndefined(collection)) throw Error(`Collection ${newCollectionName} already exists`);
+  if (!_.isUndefined(collection)) throw Error(`Collection ${newCollectionName} already exists`);
 
   const newCollection: Collection = { fields: {} };
   return { ...collectionMap, [newCollectionName]: newCollection };
