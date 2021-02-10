@@ -1,16 +1,16 @@
 import yargs from 'yargs';
-import { migrate } from './migration/migrate';
-import { generateMigrationFile } from './commands/generate-migration-file';
+import { migrate } from './commands/migrate';
+import { generateMigration } from './commands/generate-migration';
 
 yargs
   .command({
-    command: 'app:migrate',
+    command: 'migrate',
     describe: 'Run pending migrations',
     handler: migrate,
   })
   .command({
-    command: 'migration:generate',
+    command: 'generate-migration',
     describe: 'Generates a new migration file',
-    handler: generateMigrationFile,
+    handler: generateMigration,
   })
   .demandCommand().argv;

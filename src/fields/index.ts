@@ -1,18 +1,18 @@
-import { CollectionMap } from './migration/migration';
-import { countController as count, CountField, SchemaCountField } from './fields/count';
-import { integerController as integer, IntegerField, SchemaIntegerField } from './fields/integer';
+import { CollectionMap } from '../migration';
+import { countController as count, CountField, SchemaCountField } from './count';
+import { integerController as integer, IntegerField, SchemaIntegerField } from './integer';
 import {
   referenceController as reference,
   ReferenceField,
   SchemaReferenceField,
-} from './fields/reference';
+} from './reference';
 import {
   SchemaServerTimestampField,
   serverTimestampController as serverTimestamp,
   ServerTimestampField,
-} from './fields/server-timestamp';
-import { SchemaStringField, stringController as string, StringField } from './fields/string';
-import { SchemaSumField, sumController as sum, SumField } from './fields/sum';
+} from './server-timestamp';
+import { SchemaStringField, stringController as string, StringField } from './string';
+import { SchemaSumField, sumController as sum, SumField } from './sum';
 import assertNever from 'assert-never';
 
 /**

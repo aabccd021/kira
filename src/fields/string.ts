@@ -1,5 +1,5 @@
 import { integer } from './../utils';
-import { FieldController } from '../field';
+import { FieldController } from '.';
 import { ArrayOr } from '../utils';
 import { isNil } from 'lodash';
 

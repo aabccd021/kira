@@ -1,11 +1,10 @@
 import dateformat from 'dateformat';
 import path from 'path';
-import { MigrationInstance } from '../migration/migration';
-import { getLatestMigrationSchema } from '../migration/util';
 import * as fs from 'fs';
 import { getConfig } from '../config';
+import { getLatestMigrationSchema, MigrationInstance } from '../migration-schema';
 
-export function generateMigrationFile(): void {
+export function generateMigration(): void {
   const { migrationDir } = getConfig();
 
   const now = new Date();
@@ -13,15 +12,14 @@ export function generateMigrationFile(): void {
   const fileName = dateformat(now, 'yyyymmddHHMMss', useUtcTime);
   const filePath = path.join(migrationDir, `${fileName}.json`);
 
-  const { version: latestVersion } = getLatestMigrationSchema();
-
-  const emptyMigration: MigrationInstance = {
+  const { version } = getLatestMigrationSchema();
+  const emptyMigrationInstance: MigrationInstance = {
     $schema:
       `https://raw.githubusercontent.com/aabccd021/kira/master/migration-schema/` +
-      `v${latestVersion}.json`,
+      `v${version}.json`,
     migrations: [],
   };
 
   fs.mkdirSync(path.dirname(filePath), { recursive: true });
-  fs.writeFileSync(filePath, JSON.stringify(emptyMigration, null, 2));
+  fs.writeFileSync(filePath, JSON.stringify(emptyMigrationInstance, null, 2));
 }

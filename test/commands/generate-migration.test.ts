@@ -1,8 +1,8 @@
 import sinon from 'sinon';
 import * as config from '../../src/config';
-import * as migrationUtil from '../../src/migration/util';
+import * as migrationUtil from '../../src/migration-schema';
 import fs from 'fs';
-import { generateMigrationFile } from '../../src/commands/generate-migration-file';
+import { generateMigration } from '../../src/commands/generate-migration';
 import { SemVer } from 'semver';
 import { expect } from 'chai';
 
@@ -29,7 +29,7 @@ describe('generateMigrationFile', function () {
       });
 
     // Act
-    generateMigrationFile();
+    generateMigration();
 
     // Assert
     expect(getConfig.calledOnce);

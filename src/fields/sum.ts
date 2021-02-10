@@ -1,7 +1,7 @@
 import { IntegerField } from './integer';
-import { CollectionMap } from '../migration/migration';
+import { CollectionMap } from '../migration';
 import { ReferenceField } from './reference';
-import { FieldController } from '../field';
+import { FieldController } from '.';
 import { isNil } from 'lodash';
 /** Sum value of certain field of document which refers to this document */
 export type SchemaSumField = {

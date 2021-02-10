@@ -1,6 +1,6 @@
 import { isNil } from 'lodash';
-import { FieldController } from '../field';
-import { CollectionMap } from '../migration/migration';
+import { FieldController } from '.';
+import { CollectionMap } from '../migration';
 import { ReferenceField } from './reference';
 
 export type SchemaCountField = {

@@ -1,5 +1,5 @@
 import { isNil } from 'lodash';
-import { FieldController } from '../field';
+import { FieldController } from '.';
 import { integer } from '../utils';
 
 export type SchemaIntegerField = {

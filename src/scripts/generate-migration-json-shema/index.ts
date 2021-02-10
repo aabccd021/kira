@@ -1,10 +1,9 @@
-import path from 'path';
 import * as fs from 'fs';
 import * as semver from 'semver';
-import { Config } from 'ts-json-schema-generator';
-import yargs from 'yargs';
-import { getLatestMigrationSchema } from './util';
 import * as tsj from 'ts-json-schema-generator';
+import path from 'path';
+import yargs from 'yargs';
+import { getLatestMigrationSchema } from '../../migration-schema';
 
 function generateMigrationJsonSchema(): void {
   const releaseType: ReadonlyArray<semver.ReleaseType> = [
@@ -21,7 +20,7 @@ function generateMigrationJsonSchema(): void {
   const { version: latestVersion } = getLatestMigrationSchema();
   const newVersion = semver.inc(latestVersion, argv['release-type']);
 
-  const config: Config = {
+  const config: tsj.Config = {
     path: path.join('src', 'index.ts'),
     type: 'MigrationInstance',
     tsconfig: path.join(__dirname, 'tsconfig.json'),

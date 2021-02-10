@@ -1,5 +1,5 @@
-import { FieldController } from '../field';
-import { CollectionMap } from '../migration/migration';
+import { FieldController } from '.';
+import { CollectionMap } from '../migration';
 
 export type SchemaServerTimestampField = {
   type: 'serverTimestamp';
