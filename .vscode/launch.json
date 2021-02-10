@@ -10,8 +10,20 @@
         "ts-node/register"
       ],
       "args": [
-        "${workspaceFolder}/src/migrate.ts"
+        "${workspaceFolder}/src/migration/migrate.ts"
       ],
     },
+    {
+      "type": "pwa-node",
+      "request": "launch",
+      "name": "Run CLI",
+      "runtimeArgs": [
+        "-r",
+        "ts-node/register"
+      ],
+      "args": [
+        "${workspaceFolder}/src/cli.ts"
+      ],
+    }
   ]
 }

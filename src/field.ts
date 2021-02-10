@@ -38,8 +38,8 @@ export type Field =
   | SumField;
 
 export type FieldController<S extends SchemaField = SchemaField, F extends Field = Field> = {
-  schema2Field: (schema: S, collectionMap: CollectionMap) => F;
-  field2Schema: (field: F) => S;
+  readonly schema2Field: (schema: S, collectionMap: CollectionMap) => F;
+  readonly field2Schema: (field: F) => S;
 };
 
 export function schema2Field(field: SchemaField, collectionMap: CollectionMap): Field {

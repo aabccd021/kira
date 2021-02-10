@@ -22,10 +22,11 @@
     "target": "ESNext"
   },
   "exclude": [
-    "node_modules",
-    "**/*.spec.ts"
+    "./test/",
+    "./node_modules",
+    "./**/*.spec.ts"
   ],
   "include": [
-    "src/**/*"
+    "./src/**/*"
   ]
 }

@@ -3,7 +3,7 @@ import * as fs from 'fs';
 import { SemVer, sort as semverSort } from 'semver';
 import { isNil, last } from 'lodash';
 
-export function getLatestMigrationSchema(): { schema: unknown; version: SemVer } {
+export function getLatestMigrationSchema(): { readonly schema: unknown; readonly version: SemVer } {
   const schemaDir = path.join(__dirname, '..', '..', 'migration-schema');
   const fileNames = fs.readdirSync(schemaDir);
 

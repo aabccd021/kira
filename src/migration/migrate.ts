@@ -15,17 +15,17 @@ import {
   SchemaCollectionMap,
 } from './migration';
 import { getLatestMigrationSchema } from './util';
+import { getConfig } from '../config';
 
 export function migrate(): CollectionMap {
-  const projectDir = 'example';
-  const migrationInstances = getMigrationInstances({ projectDir });
+  const { appSchemaPath } = getConfig();
+  const migrationInstances = getMigrationInstances();
   const migrations = migrationInstances.flatMap(({ migrations }) => migrations);
 
   const initialCollectionMap = {};
   const collectionMap = migrations.reduce(toSchema, initialCollectionMap);
 
   const appSchema = collectionMap2Schema(collectionMap);
-  const appSchemaPath = path.join(projectDir, 'schema.json');
   fs.writeFileSync(appSchemaPath, stringify(appSchema, { space: 2 }));
 
   return collectionMap;
@@ -33,8 +33,8 @@ export function migrate(): CollectionMap {
 
 function collectionMap2Schema(collectionMap: CollectionMap): SchemaCollectionMap {
   const schemaCollectionPairs = mapValues(collectionMap, (collection) => {
-    const schemaFields = mapValues(collection.fields, field2Schema);
-    const schemaCollection: SchemaCollection = { ...collection, fields: schemaFields };
+    const fields = mapValues(collection.fields, field2Schema);
+    const schemaCollection: SchemaCollection = { ...collection, fields };
 
     return schemaCollection;
   });
@@ -48,10 +48,10 @@ function toSchema(collectionMap: CollectionMap, migration: Migration): Collectio
   assertNever(migration);
 }
 
-type MigrationFile = { fileName: string; json: unknown };
+type MigrationFile = { readonly fileName: string; readonly json: unknown };
 
-function getMigrationFiles({ projectDir }: { projectDir: string }): MigrationFile[] {
-  const migrationDir = path.join(projectDir, 'migrations');
+function getMigrationFiles(): readonly MigrationFile[] {
+  const { migrationDir } = getConfig();
 
   const migrationJSONs = fs.readdirSync(migrationDir).map((fileName) => {
     const filePath = path.join(migrationDir, fileName);
@@ -64,8 +64,8 @@ function getMigrationFiles({ projectDir }: { projectDir: string }): MigrationFil
   return migrationJSONs;
 }
 
-function getMigrationInstances({ projectDir }: { projectDir: string }): MigrationInstance[] {
-  const migrationFiles = getMigrationFiles({ projectDir });
+function getMigrationInstances(): readonly MigrationInstance[] {
+  const migrationFiles = getMigrationFiles();
   const { schema: migrationSchema } = getLatestMigrationSchema();
 
   const migrationInstances = migrationFiles.map(({ fileName, json }) => {
@@ -77,5 +77,3 @@ function getMigrationInstances({ projectDir }: { projectDir: string }): Migratio
 
   return migrationInstances;
 }
-
-migrate();

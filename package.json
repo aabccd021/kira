@@ -56,13 +56,17 @@
     },
     "plugins": [
       "@typescript-eslint",
-      "unused-imports"
+      "unused-imports",
+      "ts-immutable",
+      "mocha"
     ],
     "extends": [
       "eslint:recommended",
       "plugin:@typescript-eslint/recommended",
       "plugin:prettier/recommended",
-      "prettier/@typescript-eslint"
+      "prettier/@typescript-eslint",
+      "plugin:ts-immutable/recommended",
+      "plugin:mocha/recommended"
     ],
     "rules": {
       "max-len": [
@@ -81,37 +85,45 @@
           "printWidth": 100
         }
       ],
-      "unused-imports/no-unused-imports-ts": "warn"
+      "unused-imports/no-unused-imports-ts": "warn",
+      "ts-immutable/prefer-readonly-types": "off"
     },
     "ignorePatterns": "lib"
   },
   "dependencies": {
+    "@types/dateformat": "^3.0.1",
     "@types/json-stable-stringify": "^1.0.32",
     "@types/lodash": "^4.14.168",
     "@types/pluralize": "^0.0.29",
+    "@types/power-assert": "^1.5.3",
+    "@types/sinon": "^9.0.10",
     "@types/yargs": "^16.0.0",
+    "dateformat": "^4.5.1",
     "json-stable-stringify": "^1.0.1",
     "jsonschema": "^1.4.0",
     "lodash": "^4.17.20",
     "pluralize": "^8.0.0",
+    "power-assert": "^1.6.1",
     "semver": "^7.3.4",
+    "sinon": "^9.2.4",
     "ts-json-schema-generator": "^0.83.2",
     "yargs": "^16.2.0"
   },
   "devDependencies": {
-    "@types/chai": "^4.2.14",
     "@types/mocha": "^8.2.0",
     "@types/node": "^14.14.21",
     "@types/semver": "^7.3.4",
     "@typescript-eslint/eslint-plugin": "^4.13.0",
-    "@typescript-eslint/parser": "^4.13.0",
+    "@typescript-eslint/parser": "^4.15.0",
     "assert-never": "^1.2.1",
-    "chai": "^4.2.0",
     "cz-conventional-changelog": "3.3.0",
-    "eslint": "^7.17.0",
+    "eslint": "^7.19.0",
     "eslint-config-prettier": "^7.1.0",
+    "eslint-plugin-mocha": "^8.0.0",
     "eslint-plugin-prettier": "^3.3.1",
+    "eslint-plugin-ts-immutable": "^0.3.0",
     "eslint-plugin-unused-imports": "^1.0.1",
+    "espower-typescript": "^10.0.0",
     "husky": "^4.3.8",
     "lint-staged": "^10.5.3",
     "mocha": "^8.2.1",

@@ -4,11 +4,11 @@ import { integer } from '../utils';
 
 export type SchemaIntegerField = {
   /** @ignore */
-  type: 'integer';
+  readonly type: 'integer';
   /** Minimum value of this integer, inclusive. */
-  min?: integer;
+  readonly min?: integer;
   /** Maximum value of this integer, inclusive. */
-  max?: integer;
+  readonly max?: integer;
 };
 
 export type IntegerField = SchemaIntegerField;

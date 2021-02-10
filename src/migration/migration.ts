@@ -3,39 +3,40 @@ import pluralize from 'pluralize';
 import { Field, schema2Field, SchemaField } from '../field';
 
 export type MigrationInstance = {
-  migrations: Migration[];
+  readonly $schema?: string;
+  readonly migrations: readonly Migration[];
 };
 
 export type Migration = CreateCollection | CreateField;
 
-export type CollectionMap = { [name: string]: Collection };
-export type SchemaCollectionMap = { [name: string]: SchemaCollection };
-export type FieldMap = { [name: string]: Field };
-export type SchemaFieldMap = { [name: string]: SchemaField };
+export type CollectionMap = { readonly [name: string]: Collection };
+export type SchemaCollectionMap = { readonly [name: string]: SchemaCollection };
+export type FieldMap = { readonly [name: string]: Field };
+export type SchemaFieldMap = { readonly [name: string]: SchemaField };
 
 /**
  * Kira Collection
  */
 
 export type Collection = {
-  singularName: string;
-  fields: FieldMap;
+  readonly singularName: string;
+  readonly fields: FieldMap;
 };
 export type SchemaCollection = {
-  singularName: string;
-  fields: SchemaFieldMap;
+  readonly singularName: string;
+  readonly fields: SchemaFieldMap;
 };
 
 export type CreateCollection = {
-  type: 'createCollection';
+  readonly type: 'createCollection';
   /**
    * @minLength 1
    */
-  collectionName: string;
+  readonly collectionName: string;
   /**
    * @minLength 1
    */
-  singularName?: string;
+  readonly singularName?: string;
 };
 
 export function onCreateCollection(
@@ -59,16 +60,16 @@ export function onCreateCollection(
 }
 
 export type CreateField = {
-  type: 'createField';
+  readonly type: 'createField';
   /**
    * @minLength 1
    */
-  collectionName: string;
+  readonly collectionName: string;
   /**
    * @minLength 1
    */
-  fieldName: string;
-  field: SchemaField;
+  readonly fieldName: string;
+  readonly field: SchemaField;
 };
 
 export function onCreateField(collectionMap: CollectionMap, migration: CreateField): CollectionMap {

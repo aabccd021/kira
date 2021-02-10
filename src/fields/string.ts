@@ -5,19 +5,19 @@ import { isNil } from 'lodash';
 
 export type SchemaStringField = {
   /** @ignore */
-  type: 'string';
+  readonly type: 'string';
   /**
    * Minimum length of this string, inclusive.
    * @minimum 1
    */
-  minLength?: integer;
+  readonly minLength?: integer;
   /**
    * Maximum length of this string, inclusive.
    * @minimum 1
    */
-  maxLength?: integer;
+  readonly maxLength?: integer;
   /** `isUnique`: value of this string field will be unique across collections. */
-  properties?: ArrayOr<StringFieldProperties>;
+  readonly properties?: ArrayOr<StringFieldProperties>;
 };
 
 type StringFieldProperties = 'isUnique';
