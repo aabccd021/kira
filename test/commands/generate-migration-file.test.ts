@@ -7,7 +7,7 @@ import { SemVer } from 'semver';
 import { expect } from 'chai';
 
 describe('generateMigrationFile', function () {
-  it('generate migration file with correct date', function () {
+  it('can generate empty migration file', function () {
     // Arrange
     const month = 3;
     const clock = sinon.useFakeTimers(Date.UTC(2021, month - 1, 4, 5, 6, 7));
@@ -48,5 +48,6 @@ describe('generateMigrationFile', function () {
     ]);
 
     clock.restore();
+    sinon.restore();
   });
 });

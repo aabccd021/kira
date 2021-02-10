@@ -8,7 +8,7 @@ export type Config = {
 export function getConfig(): Config {
   const projectDir = 'example';
   const migrationDir = path.join(projectDir, 'migrations');
-  const appSchemaPath = path.join(projectDir, 'migrations');
+  const appSchemaPath = path.join(projectDir, 'schema.json');
 
   return { migrationDir, appSchemaPath };
 }
