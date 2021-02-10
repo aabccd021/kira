@@ -1,4 +1,5 @@
 import { expect } from 'chai';
+
 import { getConfig } from '../src/config';
 
 describe('getConfig', function () {

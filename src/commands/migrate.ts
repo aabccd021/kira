@@ -1,32 +1,27 @@
 import * as fs from 'fs';
-import { mapValues } from 'lodash';
 import stringify from 'json-stable-stringify';
-import { field2Schema } from '../fields';
-import { CollectionMap, SchemaCollection, SchemaCollectionMap } from '../migration';
-import { getConfig } from '../config';
-import { getMigrationInstances } from '../migration-schema';
+import { chain, mapValues } from 'lodash';
 
-export function migrate(): CollectionMap {
+import { getConfig } from '../config';
+import { toSchema } from '../fields';
+import { Collection, migrate, SchemaCollection } from '../migration';
+import { getMigrationInstances } from '../migration-schema';
+import { onKey } from '../utils';
+
+export function handleMigrate(): void {
   const { appSchemaPath } = getConfig();
   const migrationInstances = getMigrationInstances();
-  const migrations = migrationInstances.flatMap(({ migrations }) => migrations);
 
-  const emptyCollectionMap: CollectionMap = {};
-  const collectionMap = migrations.reduce(migrate, emptyCollectionMap);
+  const appSchema = chain(migrationInstances)
+    .flatMap(onKey('migrations'))
+    .reduce(migrate, {})
+    .mapValues(toSchemaCollection)
+    .value();
 
-  const appSchema = collectionMap2Schema(collectionMap);
   fs.writeFileSync(appSchemaPath, stringify(appSchema, { space: 2 }));
-
-  return collectionMap;
 }
 
-function collectionMap2Schema(collectionMap: CollectionMap): SchemaCollectionMap {
-  const schemaCollectionPairs = mapValues(collectionMap, (collection) => {
-    const fields = mapValues(collection.fields, field2Schema);
-    const schemaCollection: SchemaCollection = { ...collection, fields };
-
-    return schemaCollection;
-  });
-
-  return schemaCollectionPairs;
+function toSchemaCollection(collection: Collection): SchemaCollection {
+  const fields = mapValues(collection.fields, toSchema);
+  return { ...collection, fields };
 }

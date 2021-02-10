@@ -1,10 +1,11 @@
 import * as fs from 'fs';
-import path from 'path';
-import { Migration } from './migration';
-import { SemVer, sort as semverSort } from 'semver';
-import { getConfig } from './config';
-import { isNil, last } from 'lodash';
 import { validate } from 'jsonschema';
+import _, { isUndefined } from 'lodash';
+import path from 'path';
+import { compare as ascBySemver, SemVer } from 'semver';
+
+import { getConfig } from './config';
+import { Migration } from './migration';
 
 export type MigrationInstance = {
   $schema?: string;
@@ -12,15 +13,14 @@ export type MigrationInstance = {
 };
 export function getLatestMigrationSchema(): { schema: unknown; version: SemVer } {
   const schemaDir = path.join(__dirname, '..', '..', 'migration-schema');
-  const fileNames = fs.readdirSync(schemaDir);
 
-  const versions = fileNames
+  const latestVersion = _(fs.readdirSync(schemaDir))
     .map((fileName) => path.basename(fileName, '.json'))
-    .map((version) => new SemVer(version));
-  const sortedVersions = semverSort(versions);
-  const latestVersion = last(sortedVersions);
+    .map((version) => new SemVer(version))
+    .sort(ascBySemver)
+    .last();
 
-  if (isNil(latestVersion)) {
+  if (isUndefined(latestVersion)) {
     throw Error(`Migration schema file not found on directory: ${schemaDir}`);
   }
 
@@ -32,12 +32,10 @@ export function getLatestMigrationSchema(): { schema: unknown; version: SemVer }
 
 export function getMigrationInstances(): MigrationInstance[] {
   const { migrationDir } = getConfig();
-  const migrationJSONs = fs
+  return fs
     .readdirSync(migrationDir)
     .map((fileName) => path.join(migrationDir, fileName))
     .map(toMigrationJson);
-
-  return migrationJSONs;
 }
 
 function toMigrationJson(filePath: string): MigrationInstance {

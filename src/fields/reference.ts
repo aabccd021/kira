@@ -1,7 +1,8 @@
-import { flatten, fromPairs, isNil, keys } from 'lodash';
-import { FieldController, Field } from '.';
+import { chain, isUndefined, keys } from 'lodash';
+
 import { CollectionMap } from '../migration';
 import { ArrayOr } from '../utils';
+import { Field, FieldController } from '.';
 
 export type SchemaReferenceField = {
   /** @ignore */
@@ -17,33 +18,32 @@ export type SchemaReferenceField = {
 };
 
 export type ReferenceField = Omit<SchemaReferenceField, 'referenceSyncedFields'> & {
-  referenceSyncedFields: { [fieldName: string]: Exclude<Field, ReferenceField> };
+  referenceSyncedFields: { [fieldName: string]: SyncedField };
+};
+type SyncedField = Exclude<Field, ReferenceField>;
+
+export const _reference: FieldController<SchemaReferenceField, ReferenceField> = {
+  fieldOf,
+  schemaOf,
 };
 
-export const referenceController: FieldController<SchemaReferenceField, ReferenceField> = {
-  schema2Field,
-  field2Schema,
-};
-
-function schema2Field(
-  schemaField: SchemaReferenceField,
-  collectionMap: CollectionMap
-): ReferenceField {
+function fieldOf(schemaField: SchemaReferenceField, collectionMap: CollectionMap): ReferenceField {
   const { referenceCollectionName, referenceSyncedFields } = schemaField;
   const referenceCollection = collectionMap[referenceCollectionName];
-  const newReferenceSyncedFieldsPairs = flatten(referenceSyncedFields).map((referenceFieldName) => {
-    const referenceField = referenceCollection?.fields[referenceFieldName];
-    const trace = `{collection: ${referenceCollectionName}, field: ${referenceFieldName}}`;
-    if (isNil(referenceField)) throw Error(`Does not exists: ${trace}`);
-    if (referenceField.type === 'reference') throw Error(`ReferenceField not allowed: ${trace}`);
-    return [referenceFieldName, referenceField];
-  });
-  const newReferenceSyncedFields = fromPairs(newReferenceSyncedFieldsPairs);
+  const newReferenceSyncedFields = chain(referenceSyncedFields)
+    .flatMap((referenceFieldName) => referenceCollection?.fields[referenceFieldName])
+    .mapValues(toSyncedFields)
+    .value();
   return { ...schemaField, referenceSyncedFields: newReferenceSyncedFields };
 }
 
-function field2Schema(field: ReferenceField): SchemaReferenceField {
+function toSyncedFields(referenceField: Field | undefined): SyncedField {
+  if (isUndefined(referenceField)) throw Error(`Does not exists`);
+  if (referenceField.type === 'reference') throw Error(`ReferenceField not allowed`);
+  return referenceField;
+}
+
+function schemaOf(field: ReferenceField): SchemaReferenceField {
   const { referenceSyncedFields } = field;
-  const newReferenceSyncedFields = keys(referenceSyncedFields);
-  return { ...field, referenceSyncedFields: newReferenceSyncedFields };
+  return { ...field, referenceSyncedFields: keys(referenceSyncedFields) };
 }

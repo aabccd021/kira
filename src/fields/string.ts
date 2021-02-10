@@ -1,7 +1,8 @@
+import { isUndefined } from 'lodash';
+
+import { ArrayOr } from '../utils';
 import { integer } from './../utils';
 import { FieldController } from '.';
-import { ArrayOr } from '../utils';
-import { isNil } from 'lodash';
 
 export type SchemaStringField = {
   /** @ignore */
@@ -24,26 +25,26 @@ type StringFieldProperties = 'isUnique';
 
 export type StringField = SchemaStringField;
 
-export const stringController: FieldController<SchemaStringField, StringField> = {
-  schema2Field,
-  field2Schema,
+export const _string: FieldController<SchemaStringField, StringField> = {
+  fieldOf,
+  schemaOf,
 };
 
-function schema2Field(schemaField: SchemaStringField): StringField {
+function fieldOf(schemaField: SchemaStringField): StringField {
   const { minLength, maxLength } = schemaField;
-  if (!isNil(minLength)) {
+  if (!isUndefined(minLength)) {
     if (minLength === 0) throw Error('minLength 0 does not need to be specified');
     if (minLength < 0) throw Error(`minLength must be greater than 0, given ${minLength}`);
   }
-  if (!isNil(maxLength) && maxLength <= 0) {
+  if (!isUndefined(maxLength) && maxLength <= 0) {
     throw Error(`max must be greater than 0, given ${maxLength}`);
   }
-  if (!isNil(minLength) && !isNil(maxLength) && maxLength < minLength) {
+  if (!isUndefined(minLength) && !isUndefined(maxLength) && maxLength < minLength) {
     throw Error(`maxLength must be greater than minLength`);
   }
   return schemaField;
 }
 
-function field2Schema(field: StringField): SchemaStringField {
+function schemaOf(field: StringField): SchemaStringField {
   return field;
 }

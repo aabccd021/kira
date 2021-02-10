@@ -58,22 +58,42 @@
       "@typescript-eslint",
       "unused-imports",
       "ts-immutable",
-      "mocha"
+      "mocha",
+      "simple-import-sort",
+      "chai-friendly",
+      "chai-expect",
+      "no-null"
     ],
     "extends": [
       "eslint:recommended",
-      "plugin:@typescript-eslint/recommended",
       "plugin:prettier/recommended",
-      "prettier/@typescript-eslint",
+      "plugin:mocha/recommended",
       "plugin:ts-immutable/recommended",
-      "plugin:mocha/recommended"
+      "plugin:@typescript-eslint/recommended",
+      "prettier/@typescript-eslint"
     ],
     "rules": {
+      "curly": [
+        "warn",
+        "multi-line"
+      ],
+      "eqeqeq": "warn",
+      "no-unused-expressions": "off",
+      "no-null/no-null": "warn",
+      "chai-friendly/no-unused-expressions": "warn",
+      "simple-import-sort/imports": "warn",
+      "simple-import-sort/exports": "warn",
+      "chai-expect/no-inner-compare": "warn",
+      "chai-expect/no-inner-literal": "warn",
+      "chai-expect/missing-assertion": "warn",
+      "chai-expect/terminating-properties": "warn",
       "max-len": [
         "warn",
         {
           "code": 100,
-          "comments": 100
+          "comments": 100,
+          "ignoreStrings": true,
+          "ignoreTemplateLiterals": true
         }
       ],
       "multiline-comment-style": "warn",
@@ -116,8 +136,12 @@
     "cz-conventional-changelog": "3.3.0",
     "eslint": "^7.19.0",
     "eslint-config-prettier": "^7.1.0",
+    "eslint-plugin-chai-expect": "^2.2.0",
+    "eslint-plugin-chai-friendly": "^0.6.0",
     "eslint-plugin-mocha": "^8.0.0",
+    "eslint-plugin-no-null": "^1.0.2",
     "eslint-plugin-prettier": "^3.3.1",
+    "eslint-plugin-simple-import-sort": "^7.0.0",
     "eslint-plugin-ts-immutable": "^0.3.0",
     "eslint-plugin-unused-imports": "^1.0.1",
     "husky": "^4.3.8",

@@ -1,5 +1,4 @@
 import { FieldController } from '.';
-import { CollectionMap } from '../migration';
 
 export type SchemaServerTimestampField = {
   type: 'serverTimestamp';
@@ -7,21 +6,15 @@ export type SchemaServerTimestampField = {
 
 export type ServerTimestampField = SchemaServerTimestampField;
 
-export const serverTimestampController: FieldController<
-  SchemaServerTimestampField,
-  ServerTimestampField
-> = {
-  schema2Field,
-  field2Schema,
+export const _serverTimestamp: FieldController<SchemaServerTimestampField, ServerTimestampField> = {
+  fieldOf,
+  schemaOf,
 };
 
-function schema2Field(
-  schemaField: SchemaServerTimestampField,
-  _: CollectionMap
-): ServerTimestampField {
+function fieldOf(schemaField: SchemaServerTimestampField): ServerTimestampField {
   return schemaField;
 }
 
-function field2Schema(field: ServerTimestampField): SchemaServerTimestampField {
+function schemaOf(field: ServerTimestampField): SchemaServerTimestampField {
   return field;
 }

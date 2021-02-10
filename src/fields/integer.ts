@@ -1,6 +1,7 @@
-import { isNil } from 'lodash';
-import { FieldController } from '.';
+import { isUndefined } from 'lodash';
+
 import { integer } from '../utils';
+import { FieldController } from '.';
 
 export type SchemaIntegerField = {
   /** @ignore */
@@ -13,17 +14,19 @@ export type SchemaIntegerField = {
 
 export type IntegerField = SchemaIntegerField;
 
-export const integerController: FieldController<SchemaIntegerField, IntegerField> = {
-  schema2Field,
-  field2Schema,
+export const _integer: FieldController<SchemaIntegerField, IntegerField> = {
+  fieldOf,
+  schemaOf,
 };
 
-function schema2Field(schemaField: SchemaIntegerField): IntegerField {
+function fieldOf(schemaField: SchemaIntegerField): IntegerField {
   const { min, max } = schemaField;
-  if (!isNil(min) && !isNil(max) && max < min) throw Error('max must be greater than min');
+  if (!isUndefined(min) && !isUndefined(max) && max < min) {
+    throw Error('max must be greater than min');
+  }
   return schemaField;
 }
 
-function field2Schema(field: IntegerField): SchemaIntegerField {
+function schemaOf(field: IntegerField): SchemaIntegerField {
   return field;
 }

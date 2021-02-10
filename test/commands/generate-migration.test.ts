@@ -1,10 +1,11 @@
+import { expect } from 'chai';
+import fs from 'fs';
+import { SemVer } from 'semver';
 import sinon from 'sinon';
+
+import { handleGenerateMigration } from '../../src/commands/generate-migration';
 import * as config from '../../src/config';
 import * as migrationUtil from '../../src/migration-schema';
-import fs from 'fs';
-import { generateMigration } from '../../src/commands/generate-migration';
-import { SemVer } from 'semver';
-import { expect } from 'chai';
 
 describe('generateMigrationFile', function () {
   it('can generate empty migration file', function () {
@@ -29,15 +30,18 @@ describe('generateMigrationFile', function () {
       });
 
     // Act
-    generateMigration();
+    handleGenerateMigration();
 
     // Assert
-    expect(getConfig.calledOnce);
+    expect(getConfig.calledOnce).to.be.true;
     expect(getConfig.firstCall.args).to.be.empty;
-    expect(getLatestMigrationSchema.calledOnce);
+
+    expect(getLatestMigrationSchema.calledOnce).to.be.true;
     expect(getLatestMigrationSchema.firstCall.args).to.be.empty;
-    expect(mkdirSync.calledOnce);
+
+    expect(mkdirSync.calledOnce).to.be.true;
     expect(mkdirSync.firstCall.args).to.deep.equal(['dummyMigrationDir', { recursive: true }]);
+
     expect(writeFileSync.calledOnce).to.be.true;
     expect(writeFileSync.firstCall.args).to.deep.equal([
       'dummyMigrationDir/20210304050607.json',

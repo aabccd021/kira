@@ -1,8 +1,9 @@
-import { IntegerField } from './integer';
+import { isUndefined } from 'lodash';
+
 import { CollectionMap } from '../migration';
-import { ReferenceField } from './reference';
 import { FieldController } from '.';
-import { isNil } from 'lodash';
+import { IntegerField } from './integer';
+import { ReferenceField } from './reference';
 /** Sum value of certain field of document which refers to this document */
 export type SchemaSumField = {
   /** @ignore */
@@ -28,32 +29,28 @@ export type SumField = SchemaSumField & {
   sumField: IntegerField;
 };
 
-export const sumController: FieldController<SchemaSumField, SumField> = {
-  schema2Field,
-  field2Schema,
+export const _sum: FieldController<SchemaSumField, SumField> = {
+  fieldOf,
+  schemaOf,
 };
 
-function schema2Field(schemaField: SchemaSumField, collectionMap: CollectionMap): SumField {
+function fieldOf(schemaField: SchemaSumField, collectionMap: CollectionMap): SumField {
   const { referenceCollectionName, referenceFieldName, sumFieldName } = schemaField;
   const referenceCollection = collectionMap[referenceCollectionName];
   const referenceField = referenceCollection?.fields[referenceFieldName];
   const sumField = referenceCollection?.fields[sumFieldName];
 
-  if (isNil(referenceField)) {
+  if (isUndefined(referenceField)) {
     throw Error(
-      `Referenced field ${referenceFieldName} does not exists` +
-        ` on collection ${referenceCollectionName}`
+      `Referenced field ${referenceFieldName} does not exists on collection ${referenceCollectionName}`
     );
   }
   if (referenceField.type !== 'reference') {
     throw Error(`Referenced field ${referenceFieldName} is not ReferenceField`);
   }
-
-  if (isNil(sumField)) {
-    throw Error(
-      `Referenced field ${referenceFieldName} does not exists` +
-        ` on collection ${referenceCollectionName}`
-    );
+  if (isUndefined(sumField)) {
+    const message = `Referenced field ${referenceFieldName} does not exists on collection ${referenceCollectionName}`;
+    throw Error(message);
   }
   if (sumField.type !== 'integer') {
     throw Error(`Sum field ${sumFieldName} is not Integer Field`);
@@ -62,6 +59,6 @@ function schema2Field(schemaField: SchemaSumField, collectionMap: CollectionMap)
   return { ...schemaField, referenceField, sumField };
 }
 
-function field2Schema(field: SumField): SchemaSumField {
+function schemaOf(field: SumField): SchemaSumField {
   return field;
 }
