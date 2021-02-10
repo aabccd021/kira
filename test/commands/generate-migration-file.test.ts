@@ -4,7 +4,7 @@ import * as migrationUtil from '../../src/migration/util';
 import fs from 'fs';
 import { generateMigrationFile } from '../../src/commands/generate-migration-file';
 import { SemVer } from 'semver';
-import * as assert from 'power-assert';
+import { expect } from 'chai';
 
 describe('generateMigrationFile', function () {
   it('generate migration file with correct date', function () {
@@ -32,14 +32,14 @@ describe('generateMigrationFile', function () {
     generateMigrationFile();
 
     // Assert
-    assert.ok(getConfig.calledOnce);
-    assert.deepStrictEqual(getConfig.firstCall.args, []);
-    assert.ok(getLatestMigrationSchema.calledOnce);
-    assert.deepStrictEqual(getLatestMigrationSchema.firstCall.args, []);
-    assert.ok(mkdirSync.calledOnce);
-    assert.deepStrictEqual(mkdirSync.firstCall.args, ['dummyMigrationDir', { recursive: true }]);
-    assert.ok(writeFileSync.calledOnce);
-    assert.deepStrictEqual(writeFileSync.firstCall.args, [
+    expect(getConfig.calledOnce);
+    expect(getConfig.firstCall.args).to.be.empty;
+    expect(getLatestMigrationSchema.calledOnce);
+    expect(getLatestMigrationSchema.firstCall.args).to.be.empty;
+    expect(mkdirSync.calledOnce);
+    expect(mkdirSync.firstCall.args).to.deep.equal(['dummyMigrationDir', { recursive: true }]);
+    expect(writeFileSync.calledOnce).to.be.true;
+    expect(writeFileSync.firstCall.args).to.deep.equal([
       'dummyMigrationDir/20210304050607.json',
       `{
   "$schema": "https://raw.githubusercontent.com/aabccd021/kira/master/migration-schema/v0.1.0.json",
