@@ -3,11 +3,11 @@
   "migrations": [
     {
       "type": "createCollection",
-      "collectionName": "users"
+      "collectionName": "user"
     },
     {
       "type": "createField",
-      "collectionName": "users",
+      "collectionName": "user",
       "fieldName": "userName",
       "field": {
         "type": "string"
