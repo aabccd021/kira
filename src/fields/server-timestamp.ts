@@ -2,7 +2,7 @@ import { FieldController } from '../field';
 import { CollectionMap } from '../migration/migration';
 
 export type SchemaServerTimestampField = {
-  readonly type: 'serverTimestamp';
+  type: 'serverTimestamp';
 };
 
 export type ServerTimestampField = SchemaServerTimestampField;

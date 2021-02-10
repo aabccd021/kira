@@ -1,75 +1,51 @@
-import { isNil, some } from 'lodash';
-import pluralize from 'pluralize';
+import { isNil } from 'lodash';
 import { Field, schema2Field, SchemaField } from '../field';
 
 export type MigrationInstance = {
-  readonly $schema?: string;
-  readonly migrations: readonly Migration[];
+  $schema?: string;
+  migrations: Migration[];
 };
 
 export type Migration = CreateCollection | CreateField;
 
-export type CollectionMap = { readonly [name: string]: Collection };
-export type SchemaCollectionMap = { readonly [name: string]: SchemaCollection };
-export type FieldMap = { readonly [name: string]: Field };
-export type SchemaFieldMap = { readonly [name: string]: SchemaField };
+export type CollectionMap = { [name: string]: Collection };
+export type SchemaCollectionMap = { [name: string]: SchemaCollection };
+export type FieldMap = { [name: string]: Field };
+export type SchemaFieldMap = { [name: string]: SchemaField };
 
 /**
  * Kira Collection
  */
-
 export type Collection = {
-  readonly singularName: string;
-  readonly fields: FieldMap;
+  fields: FieldMap;
 };
 export type SchemaCollection = {
-  readonly singularName: string;
-  readonly fields: SchemaFieldMap;
+  fields: SchemaFieldMap;
 };
 
 export type CreateCollection = {
-  readonly type: 'createCollection';
-  /**
-   * @minLength 1
-   */
-  readonly collectionName: string;
-  /**
-   * @minLength 1
-   */
-  readonly singularName?: string;
+  type: 'createCollection';
+  collectionName: string;
 };
 
 export function onCreateCollection(
   collectionMap: CollectionMap,
   migration: CreateCollection
 ): CollectionMap {
-  const { collectionName, singularName } = migration;
+  const { collectionName: newCollectionName } = migration;
 
-  const collection = collectionMap[collectionName];
-  if (!isNil(collection)) throw Error(`Collection ${collectionName} already exists`);
+  const collection = collectionMap[newCollectionName];
+  if (!isNil(collection)) throw Error(`Collection ${newCollectionName} already exists`);
 
-  const newSingularName = singularName ?? pluralize.singular(collectionName);
-  const duplicateSingularNameFound = some(
-    collectionMap,
-    ({ singularName }) => singularName === newSingularName
-  );
-  if (duplicateSingularNameFound) throw Error(`Duplicate singular name found: ${newSingularName}`);
-
-  const newCollection: Collection = { fields: {}, singularName: newSingularName };
-  return { ...collectionMap, [collectionName]: newCollection };
+  const newCollection: Collection = { fields: {} };
+  return { ...collectionMap, [newCollectionName]: newCollection };
 }
 
 export type CreateField = {
-  readonly type: 'createField';
-  /**
-   * @minLength 1
-   */
-  readonly collectionName: string;
-  /**
-   * @minLength 1
-   */
-  readonly fieldName: string;
-  readonly field: SchemaField;
+  type: 'createField';
+  collectionName: string;
+  fieldName: string;
+  field: SchemaField;
 };
 
 export function onCreateField(collectionMap: CollectionMap, migration: CreateField): CollectionMap {

@@ -1,5 +1,5 @@
 {
-  "$schema": "../../migration-schema/v0.1.1.json",
+  "$schema": "../../migration-schema/v0.1.2.json",
   "migrations": [
     {
       "type": "createCollection",

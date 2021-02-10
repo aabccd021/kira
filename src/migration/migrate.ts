@@ -48,9 +48,9 @@ function toSchema(collectionMap: CollectionMap, migration: Migration): Collectio
   assertNever(migration);
 }
 
-type MigrationFile = { readonly fileName: string; readonly json: unknown };
+type MigrationFile = { fileName: string; json: unknown };
 
-function getMigrationFiles(): readonly MigrationFile[] {
+function getMigrationFiles(): MigrationFile[] {
   const { migrationDir } = getConfig();
 
   const migrationJSONs = fs.readdirSync(migrationDir).map((fileName) => {
@@ -64,7 +64,7 @@ function getMigrationFiles(): readonly MigrationFile[] {
   return migrationJSONs;
 }
 
-function getMigrationInstances(): readonly MigrationInstance[] {
+function getMigrationInstances(): MigrationInstance[] {
   const migrationFiles = getMigrationFiles();
   const { schema: migrationSchema } = getLatestMigrationSchema();
 

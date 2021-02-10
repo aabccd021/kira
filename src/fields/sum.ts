@@ -6,29 +6,26 @@ import { isNil } from 'lodash';
 /** Sum value of certain field of document which refers to this document */
 export type SchemaSumField = {
   /** @ignore */
-  readonly type: 'sum';
+  type: 'sum';
   /**
    * Name of collection of document of summed field, the collection must have reference to
    * collection of this document.
-   * @minLength 1
    */
-  readonly referenceCollectionName: string;
+  referenceCollectionName: string;
   /**
    * Name of {@link ReferenceField} of document of summed field, only field of document that
    * reference this document will be summed.
-   * @minLength 1
    */
-  readonly referenceFieldName: string;
+  referenceFieldName: string;
   /**
    * Name of field to be summed. The field must be {@link IntegerField}.
-   * @minLength 1
    */
-  readonly sumFieldName: string;
+  sumFieldName: string;
 };
 
 export type SumField = SchemaSumField & {
-  readonly referenceField: ReferenceField;
-  readonly sumField: IntegerField;
+  referenceField: ReferenceField;
+  sumField: IntegerField;
 };
 
 export const sumController: FieldController<SchemaSumField, SumField> = {

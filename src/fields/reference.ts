@@ -5,21 +5,19 @@ import { ArrayOr } from '../utils';
 
 export type SchemaReferenceField = {
   /** @ignore */
-  readonly type: 'reference';
+  type: 'reference';
   /**
    * Name of collection of referenced document.
-   * @minLength 1
    */
-  readonly referenceCollectionName: string;
+  referenceCollectionName: string;
   /**
    * Name of fields to be synced.
-   * @minLength 1
    */
-  readonly referenceSyncedFields: ArrayOr<string>;
+  referenceSyncedFields: ArrayOr<string>;
 };
 
 export type ReferenceField = Omit<SchemaReferenceField, 'referenceSyncedFields'> & {
-  readonly referenceSyncedFields: { readonly [fieldName: string]: Exclude<Field, ReferenceField> };
+  referenceSyncedFields: { [fieldName: string]: Exclude<Field, ReferenceField> };
 };
 
 export const referenceController: FieldController<SchemaReferenceField, ReferenceField> = {

@@ -5,23 +5,21 @@ import { ReferenceField } from './reference';
 
 export type SchemaCountField = {
   /** @ignore */
-  readonly type: 'count';
+  type: 'count';
   /**
    * Name of collection of counted document, the collection must have reference to collection of
    * this document.
-   * @minLength 1
    */
-  readonly referenceCollectionName: string;
+  referenceCollectionName: string;
   /**
    * Name of {@link ReferenceField} of counted document, only document that reference document of
    * this field will be counted.
-   * @minLength 1
    */
-  readonly referenceFieldName: string;
+  referenceFieldName: string;
 };
 
 export type CountField = SchemaCountField & {
-  readonly referenceField: ReferenceField;
+  referenceField: ReferenceField;
 };
 
 export const countController: FieldController<SchemaCountField, CountField> = {
