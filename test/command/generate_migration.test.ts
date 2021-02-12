@@ -1,11 +1,11 @@
+import assert from 'assert';
 import fs from 'fs';
-import assert from 'power-assert';
 import { SemVer } from 'semver';
 import sinon from 'sinon';
 
-import * as config from '../config';
-import * as migrationUtil from '../migration_schema';
-import { handleGenerateMigrationCommand } from './generate_migration';
+import { handleGenerateMigrationCommand } from '../../src/command/generate_migration';
+import * as config from '../../src/config';
+import * as migrationUtil from '../../src/migration_schema';
 
 test('can generate empty migration file', function () {
   // Arrange

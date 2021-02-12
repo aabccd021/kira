@@ -1,6 +1,6 @@
-import assert from 'power-assert';
+import assert from 'assert';
 
-import { getConfig } from './config';
+import { getConfig } from '../src/config';
 
 test('can return config', function () {
   const { migrationDir, appSchemaPath } = getConfig();

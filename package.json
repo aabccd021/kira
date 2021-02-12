@@ -23,7 +23,7 @@
     "lint": "eslint '**/*.ts'",
     "lint:fix": "eslint --fix '**/*.ts'",
     "semantic-release": "semantic-release",
-    "test": "yarn test:types && mocha -u tdd --require ts-node/register 'src/**/*_test.ts'",
+    "test": "yarn test:types && mocha -u tdd --require ts-node/register 'test/**/*.test.ts'",
     "test:coverage": "nyc --reporter=json --reporter=text --reporter=text-summary --reporter=lcov yarn test",
     "test:types": "tsc --noEmit"
   },
@@ -112,7 +112,7 @@
       "mocha/no-global-tests": "off",
       "filenames/match-regex": [
         2,
-        "^[a-z_]+$",
+        "^[a-z_.]+$",
         true
       ],
       "filenames/no-index": "warn",
@@ -145,7 +145,6 @@
     "@types/lodash": "^4.14.168",
     "@types/mocha": "^8.2.0",
     "@types/node": "^14.14.26",
-    "@types/power-assert": "^1.5.3",
     "@types/semver": "^7.3.4",
     "@types/sinon": "^9.0.10",
     "@types/yargs": "^16.0.0",
@@ -165,12 +164,10 @@
     "eslint-plugin-simple-import-sort": "^7.0.0",
     "eslint-plugin-ts-immutable": "^0.3.0",
     "eslint-plugin-unused-imports": "^1.0.1",
-    "espower-typescript": "^10.0.0",
     "husky": "^4.3.8",
     "lint-staged": "^10.5.3",
     "mocha": "^8.3.0",
     "nyc": "^15.1.0",
-    "power-assert": "^1.6.1",
     "prettier": "^2.2.1",
     "semantic-release": "^17.3.3",
     "sinon": "^9.2.4",
