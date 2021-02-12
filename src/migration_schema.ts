@@ -5,13 +5,13 @@ import path from 'path';
 import { compare as ascBySemver, SemVer } from 'semver';
 
 import { getConfig } from './config';
-import { Migration } from './migration';
+import { Migration } from './migration/mod';
 
 export type MigrationInstance = {
-  $schema?: string;
-  migrations: Migration[];
+  readonly $schema?: string;
+  readonly migrations: readonly Migration[];
 };
-export function getLatestMigrationSchema(): { schema: unknown; version: SemVer } {
+export function getLatestMigrationSchema(): { readonly schema: unknown; readonly version: SemVer } {
   const schemaDir = path.join(__dirname, '..', '..', 'migration-schema');
 
   const latestVersion = _(schemaDir)
@@ -31,7 +31,7 @@ export function getLatestMigrationSchema(): { schema: unknown; version: SemVer }
   return { schema, version: latestVersion };
 }
 
-export function getMigrationInstances(): MigrationInstance[] {
+export function getMigrationInstances(): readonly MigrationInstance[] {
   const { migrationDir } = getConfig();
   return _(migrationDir)
     .thru((dir) => fs.readdirSync(dir))

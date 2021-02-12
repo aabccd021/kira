@@ -1,13 +1,14 @@
 import _ from 'lodash';
 
-import { SchemaField, toField } from '../fields';
-import { Collection, CollectionMap, FieldMap } from '.';
+import { SchemaField } from '../field';
+import { Collection, CollectionMap, FieldMap } from '../field_processor/_util';
+import { toField } from '../field_processor/mod';
 
 export type CreateField = {
-  type: 'createField';
-  collectionName: string;
-  fieldName: string;
-  field: SchemaField;
+  readonly type: 'createField';
+  readonly collectionName: string;
+  readonly fieldName: string;
+  readonly field: SchemaField;
 };
 
 export function createField(collectionMap: CollectionMap, migration: CreateField): CollectionMap {

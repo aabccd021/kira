@@ -22,7 +22,7 @@
     "target": "ESNext"
   },
   "exclude": [
-    "./test/",
+    "./src/**/*_test.ts",
     "./node_modules",
     "./**/*.spec.ts"
   ],

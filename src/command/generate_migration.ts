@@ -3,9 +3,9 @@ import * as fs from 'fs';
 import path from 'path';
 
 import { getConfig } from '../config';
-import { getLatestMigrationSchema, MigrationInstance } from '../migration-schema';
+import { getLatestMigrationSchema, MigrationInstance } from '../migration_schema';
 
-export function handleGenerateMigration(): void {
+export function handleGenerateMigrationCommand(): void {
   const { migrationDir } = getConfig();
 
   const now = new Date();

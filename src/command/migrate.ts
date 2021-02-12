@@ -3,12 +3,13 @@ import stringify from 'json-stable-stringify';
 import _ from 'lodash';
 
 import { getConfig } from '../config';
-import { toSchema } from '../fields';
-import { Collection, migrate, SchemaCollection } from '../migration';
-import { getMigrationInstances } from '../migration-schema';
+import { Collection, SchemaCollection } from '../field_processor/_util';
+import { toSchema } from '../field_processor/mod';
+import { migrate } from '../migration/mod';
+import { getMigrationInstances } from '../migration_schema';
 import { onKey } from '../utils';
 
-export function handleMigrate(): void {
+export function handleMigrateCommand(): void {
   const { appSchemaPath } = getConfig();
   const migrationInstances = getMigrationInstances();
 

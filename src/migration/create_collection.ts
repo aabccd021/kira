@@ -1,10 +1,10 @@
 import _ from 'lodash';
 
-import { Collection, CollectionMap } from '.';
+import { Collection, CollectionMap } from '../field_processor/_util';
 
 export type CreateCollection = {
-  type: 'createCollection';
-  collectionName: string;
+  readonly type: 'createCollection';
+  readonly collectionName: string;
 };
 
 export function createCollection(

@@ -1,8 +1,8 @@
 import path from 'path';
 
 export type Config = {
-  migrationDir: string;
-  appSchemaPath: string;
+  readonly migrationDir: string;
+  readonly appSchemaPath: string;
 };
 
 export function getConfig(): Config {

@@ -4,10 +4,10 @@ import * as semver from 'semver';
 import * as tsj from 'ts-json-schema-generator';
 import yargs from 'yargs';
 
-import { getLatestMigrationSchema } from '../../migration-schema';
+import { getLatestMigrationSchema } from '../../migration_schema';
 
 function generateMigrationJsonSchema(): void {
-  const releaseTypes: semver.ReleaseType[] = [
+  const releaseTypes: readonly semver.ReleaseType[] = [
     'major',
     'premajor',
     'minor',

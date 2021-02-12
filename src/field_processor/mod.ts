@@ -1,16 +1,13 @@
 import assertNever from 'assert-never';
 
-import { CollectionMap } from '../migration';
-import { _count, CountField, SchemaCountField } from './count';
-import { _integer, IntegerField, SchemaIntegerField } from './integer';
-import { _reference, ReferenceField, SchemaReferenceField } from './reference';
-import {
-  _serverTimestamp,
-  SchemaServerTimestampField,
-  ServerTimestampField,
-} from './server-timestamp';
-import { _string, SchemaStringField, StringField } from './string';
-import { _sum, SchemaSumField, SumField } from './sum';
+import { Field, SchemaField } from '../field';
+import { CollectionMap } from './_util';
+import { _count } from './count';
+import { _integer } from './integer';
+import { _reference } from './reference';
+import { _serverTimestamp } from './server_timestamp';
+import { _string } from './string';
+import { _sum } from './sum';
 
 /**
  * Kira fields.
@@ -18,27 +15,6 @@ import { _sum, SchemaSumField, SumField } from './sum';
  * Property `type` of a field is required, and must be a camelCase of it's name.
  *
  */
-export type SchemaField =
-  | SchemaCountField
-  | SchemaIntegerField
-  | SchemaReferenceField
-  | SchemaServerTimestampField
-  | SchemaStringField
-  | SchemaSumField;
-
-export type Field =
-  | CountField
-  | IntegerField
-  | ReferenceField
-  | ServerTimestampField
-  | StringField
-  | SumField;
-
-export type FieldController<S extends SchemaField = SchemaField, F extends Field = Field> = {
-  fieldOf: (schema: S, collectionMap: CollectionMap) => F;
-  schemaOf: (field: F) => S;
-};
-
 export function toField(field: SchemaField, collectionMap: CollectionMap): Field {
   if (field.type === 'count') return _count.fieldOf(field, collectionMap);
   if (field.type === 'integer') return _integer.fieldOf(field, collectionMap);
