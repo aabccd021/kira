@@ -2,140 +2,137 @@
  * util
  */
 type integer = number;
+type Validation<T> = {
+  value: T;
+  errorMessage?: string;
+};
+
+/**
+ * Field Type
+ */
+export type FieldType = 'count' | 'integer' | 'reference' | 'serverTimestamp' | 'string' | 'sum';
 
 /**
  * Schema Field
  */
-export type SchemaField =
-  | CountSchemaField
-  | IntegerSchemaField
-  | ReferenceSchemaField
-  | ServerTimestampSchemaField
-  | StringSchemaField
-  | SumSchemaField;
+export type SchemaField = (
+  | CountFieldMigration
+  | IntegerFieldMigration
+  | ReferenceFieldMigration
+  | ServerTimestampFieldMigration
+  | StringFieldMigration
+  | SumFieldMigration
+) & { fieldType: FieldType };
 
 /**
  * Field
  */
-export type Field =
+export type Field = (
   | CountField
   | IntegerField
   | ReferenceField
   | ServerTimestampField
   | StringField
-  | SumField;
+  | SumField
+) & { fieldType: FieldType };
 
 /**
  * Sum Field
  * Sum value of certain field of document which refers to this document
  */
-export type SumSchemaField = {
+export type SumFieldMigration = {
   /** @ignore */
-  readonly type: 'sum';
+  fieldType: 'sum';
   /**
    * Name of collection of document of summed field, the collection must have reference to
    * collection of this document.
    */
-  readonly referenceCollectionName: string;
+  referenceCollectionName: string;
   /**
    * Name of {@link ReferenceField} of document of summed field, only field of document that
    * reference this document will be summed.
    */
-  readonly referenceFieldName: string;
-  /**
-   * Name of field to be summed. The field must be {@link IntegerField}.
-   */
-  readonly sumFieldName: string;
+  referenceFieldName: string;
+  /** Name of field to be summed. The field must be {@link IntegerField}. */
+  sumFieldName: string;
 };
-
-export type SumField = SumSchemaField & {
-  readonly referenceField: ReferenceField;
-  readonly sumField: IntegerField;
+export type SumField = SumFieldMigration & {
+  referenceField: ReferenceField;
+  sumField: IntegerField;
 };
 
 /**
  * Count
  */
-export type CountSchemaField = {
+export type CountFieldMigration = {
   /** @ignore */
-  readonly type: 'count';
+  fieldType: 'count';
   /**
    * Name of collection of counted document, the collection must have reference to collection of
    * this document.
    */
-  readonly referenceCollectionName: string;
+  referenceCollectionName: string;
   /**
    * Name of {@link ReferenceField} of counted document, only document that reference document of
    * this field will be counted.
    */
-  readonly referenceFieldName: string;
+  referenceFieldName: string;
 };
-
-export type CountField = CountSchemaField & {
-  readonly referenceField: ReferenceField;
+export type CountField = CountFieldMigration & {
+  referenceField: ReferenceField;
 };
 
 /**
  * Reference
  */
-export type ReferenceSchemaField = {
+export type ReferenceFieldMigration = {
   /** @ignore */
-  readonly type: 'reference';
-  /**
-   * Name of collection of referenced document.
-   */
-  readonly referenceCollectionName: string;
-  /**
-   * Name of fields to be synced.
-   */
-  readonly referenceSyncedFields: ReadonlyArray<string>;
+  fieldType: 'reference';
+  /** Name of collection of referenced document. */
+  referenceCollectionName: string;
+  /** Name of fields to be synced. */
+  referenceSyncedFields: Array<string>;
 };
-
-export type ReferenceField = Omit<ReferenceSchemaField, 'referenceSyncedFields'> & {
-  readonly referenceSyncedFields: { readonly [fieldName: string]: Exclude<Field, ReferenceField> };
+export type ReferenceField = Omit<ReferenceFieldMigration, 'referenceSyncedFields'> & {
+  referenceSyncedFields: { [fieldName: string]: Exclude<Field, ReferenceField> };
 };
 
 /**
  * Server Timestamp
  */
-export type ServerTimestampField = ServerTimestampSchemaField;
-
-export type ServerTimestampSchemaField = {
-  readonly type: 'serverTimestamp';
+export type ServerTimestampField = ServerTimestampFieldMigration;
+export type ServerTimestampFieldMigration = {
+  fieldType: 'serverTimestamp';
 };
 
 /**
  * String
  */
-export type StringSchemaField = {
+export type StringFieldMigration = {
   /** @ignore */
-  readonly type: 'string';
-  /**
-   * Minimum length of this string, inclusive.
-   * @minimum 1
-   */
-  readonly minLength?: integer;
-  /**
-   * Maximum length of this string, inclusive.
-   * @minimum 1
-   */
-  readonly maxLength?: integer;
+  fieldType: 'string';
   /** `isUnique`: value of this string field will be unique across collections. */
-  readonly properties?: ReadonlyArray<'isUnique'>;
+  properties?: ReadonlyArray<'isUnique'>;
+  validation?: {
+    /** Minimum length of this string, inclusive. */
+    minLength?: Validation<integer>;
+    /** Maximum length of this string, inclusive. */
+    maxLength?: Validation<integer>;
+  };
 };
-
-export type StringField = StringSchemaField;
+export type StringField = StringFieldMigration;
 
 /**
  * Integer
  */
-export type IntegerSchemaField = {
+export type IntegerFieldMigration = {
   /** @ignore */
-  readonly type: 'integer';
-  /** Minimum value of this integer, inclusive. */
-  readonly min?: integer;
-  /** Maximum value of this integer, inclusive. */
-  readonly max?: integer;
+  fieldType: 'integer';
+  validation?: {
+    /** Minimum value of this integer, inclusive. */
+    min?: Validation<integer>;
+    /** Maximum value of this integer, inclusive. */
+    max?: Validation<integer>;
+  };
 };
-
-export type IntegerField = IntegerSchemaField;
+export type IntegerField = IntegerFieldMigration;

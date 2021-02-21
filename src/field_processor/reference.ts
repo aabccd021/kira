@@ -1,30 +1,33 @@
-import _ from 'lodash';
+import { chain, isUndefined, keys } from 'lodash';
 
-import { Field, ReferenceField, ReferenceSchemaField } from '../field';
-import { CollectionMap, FieldProcessor } from './_util';
+import { Field, ReferenceField, ReferenceFieldMigration } from '../field';
+import { Collections, FieldProcessor } from './_util';
 
-export const _reference: FieldProcessor<ReferenceSchemaField, ReferenceField> = {
+export const _reference: FieldProcessor<ReferenceField, ReferenceFieldMigration> = {
   fieldOf,
   schemaOf,
+  dependency: [],
 };
 
-function fieldOf(schemaField: ReferenceSchemaField, collectionMap: CollectionMap): ReferenceField {
+function fieldOf(schemaField: ReferenceFieldMigration, collectionMap: Collections): ReferenceField {
   const { referenceCollectionName, referenceSyncedFields } = schemaField;
   const referenceCollection = collectionMap[referenceCollectionName];
-  const newReferenceSyncedFields = _(referenceSyncedFields)
-    .flatMap((referenceFieldName) => referenceCollection?.fields[referenceFieldName])
+
+  const newReferenceSyncedFields = chain(referenceSyncedFields)
+    .map((referenceFieldName) => referenceCollection?.fields[referenceFieldName])
     .mapValues(toSyncedFields)
     .value();
+
   return { ...schemaField, referenceSyncedFields: newReferenceSyncedFields };
 }
 
 function toSyncedFields(referenceField: Field | undefined): Exclude<Field, ReferenceField> {
-  if (_.isUndefined(referenceField)) throw Error(`Does not exists`);
-  if (referenceField.type === 'reference') throw Error(`ReferenceField not allowed`);
+  if (isUndefined(referenceField)) throw Error(`Does not exists`);
+  if (referenceField.fieldType === 'reference') throw Error(`ReferenceField not allowed`);
   return referenceField;
 }
 
-function schemaOf(field: ReferenceField): ReferenceSchemaField {
+function schemaOf(field: ReferenceField): ReferenceFieldMigration {
   const { referenceSyncedFields } = field;
-  return { ...field, referenceSyncedFields: _.keys(referenceSyncedFields) };
+  return { ...field, referenceSyncedFields: keys(referenceSyncedFields) };
 }

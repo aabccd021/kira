@@ -1,28 +1,37 @@
-import _ from 'lodash';
+import { isUndefined } from 'lodash';
 
-import { StringField, StringSchemaField } from '../field';
+import { StringField, StringFieldMigration } from '../field';
 import { FieldProcessor } from './_util';
 
-export const _string: FieldProcessor<StringSchemaField, StringField> = {
+export const _string: FieldProcessor<StringField, StringFieldMigration> = {
   fieldOf,
   schemaOf,
+  dependency: [],
 };
 
-function fieldOf(schemaField: StringSchemaField): StringField {
-  const { minLength, maxLength } = schemaField;
-  if (!_.isUndefined(minLength)) {
-    if (minLength === 0) throw Error('minLength 0 does not need to be specified');
-    if (minLength < 0) throw Error(`minLength must be greater than 0, given ${minLength}`);
+function fieldOf(schemaField: StringFieldMigration): StringField {
+  const { validation } = schemaField;
+  const minLengthValue = validation?.minLength?.value;
+  const maxLengthValue = validation?.maxLength?.value;
+  if (!isUndefined(minLengthValue)) {
+    if (minLengthValue === 0) throw Error('minLength 0 does not need to be specified');
+    if (minLengthValue < 0) {
+      throw Error(`minLength must be greater than 0, given ${minLengthValue}`);
+    }
   }
-  if (!_.isUndefined(maxLength) && maxLength <= 0) {
-    throw Error(`max must be greater than 0, given ${maxLength}`);
+  if (!isUndefined(maxLengthValue) && maxLengthValue <= 0) {
+    throw Error(`max must be greater than 0, given ${maxLengthValue}`);
   }
-  if (!_.isUndefined(minLength) && !_.isUndefined(maxLength) && maxLength < minLength) {
+  if (
+    !isUndefined(minLengthValue) &&
+    !isUndefined(maxLengthValue) &&
+    maxLengthValue < minLengthValue
+  ) {
     throw Error(`maxLength must be greater than minLength`);
   }
   return schemaField;
 }
 
-function schemaOf(field: StringField): StringSchemaField {
+function schemaOf(field: StringField): StringFieldMigration {
   return field;
 }

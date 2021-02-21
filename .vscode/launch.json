@@ -10,7 +10,8 @@
         "ts-node/register"
       ],
       "args": [
-        "${workspaceFolder}/src/migration/migrate.ts"
+        "${workspaceFolder}/src/cli.ts",
+        "migrate"
       ],
     },
     {

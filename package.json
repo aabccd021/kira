@@ -103,16 +103,16 @@
       "import/no-cycle": "warn",
       "lodash/chaining": [
         "warn",
-        "always"
+        "implicit"
       ],
       "lodash/import-scope": [
         "warn",
-        "full"
+        "member"
       ],
       "mocha/no-global-tests": "off",
       "filenames/match-regex": [
         2,
-        "^[a-z_.]+$",
+        "^[a-z0-9_.]+$",
         true
       ],
       "filenames/no-index": "warn",
@@ -126,6 +126,7 @@
       ],
       "simple-import-sort/exports": "warn",
       "simple-import-sort/imports": "warn",
+      "ts-immutable/prefer-readonly-types": "off",
       "unused-imports/no-unused-imports-ts": "warn"
     },
     "ignorePatterns": "lib"
