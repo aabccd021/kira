@@ -1,23 +1,22 @@
 import { expect } from 'chai';
-import rewire from 'rewire';
 import sinon from 'sinon';
 
-import { SchemaFieldEntry } from '../../src/command/migrate';
+import {
+  _byDependency,
+  _processField,
+  _toFieldEntries,
+  SchemaFieldEntry,
+} from '../../src/command/migrate';
 import { Field } from '../../src/field';
 import { Collections, SchemaCollection } from '../../src/field_processor/_util';
 import * as field_processor from '../../src/field_processor/mod';
-
-const migrate = rewire('../../src/command/migrate');
-const byDependency = migrate.__get__('byDependency');
-const processField = migrate.__get__('processField');
-const toFieldEntries = migrate.__get__('toFieldEntries');
 
 describe('migration', function () {
   afterEach(function () {
     sinon.restore();
   });
 
-  describe('byDependency', function () {
+  describe('_byDependency', function () {
     it('return -1 if a is dependency of b', async function () {
       // given
       const aId = { collectionName: 'colX', fieldName: 'fieldA' };
@@ -37,7 +36,7 @@ describe('migration', function () {
         .returns([aId]);
 
       // when
-      const compareResult = byDependency(a, b);
+      const compareResult = _byDependency(a, b);
 
       //then
       expect(dependencyIdsOf.calledTwice).to.be.true;
@@ -65,7 +64,7 @@ describe('migration', function () {
         .returns([]);
 
       // when
-      const compareResult = byDependency(a, b);
+      const compareResult = _byDependency(a, b);
 
       //then
       expect(dependencyIdsOf.calledTwice).to.be.true;
@@ -92,7 +91,7 @@ describe('migration', function () {
         .returns([]);
 
       // when
-      const compareResult = byDependency(a, b);
+      const compareResult = _byDependency(a, b);
 
       //then
       expect(dependencyIdsOf.calledTwice).to.be.true;
@@ -102,7 +101,7 @@ describe('migration', function () {
     });
   });
 
-  describe('processField', function () {
+  describe('_processField', function () {
     it('return processed Collections', async function () {
       // given
       const dummySchemaField: SchemaFieldEntry = {
@@ -116,7 +115,7 @@ describe('migration', function () {
       const dummyCollections: Collections = {};
 
       // when
-      const newCollections = processField(dummyCollections, dummySchemaField);
+      const newCollections = _processField(dummyCollections, dummySchemaField);
 
       //then
       expect(fieldOf.calledOnce).to.be.true;
@@ -128,7 +127,7 @@ describe('migration', function () {
     });
   });
 
-  describe('toFieldEntries', function () {
+  describe('_toFieldEntries', function () {
     it('return schema field entries from collection pairs', async function () {
       // given
       const dummyCollectionPair: [string, SchemaCollection] = [
@@ -136,7 +135,7 @@ describe('migration', function () {
         { fields: { fieldB: { fieldType: 'string' } } },
       ];
       // when
-      const resultSchemaFieldEntries = toFieldEntries(dummyCollectionPair);
+      const resultSchemaFieldEntries = _toFieldEntries(dummyCollectionPair);
 
       //then
       expect(resultSchemaFieldEntries).to.deep.equal([

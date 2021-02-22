@@ -17,9 +17,9 @@ export async function migrate(): Promise<void> {
   const schema = await loadSchemaOnPath(schemaPath);
   const collections = chain(schema.collections)
     .toPairs()
-    .flatMap(toFieldEntries)
-    .thru(sort(byDependency))
-    .reduce(processField, {})
+    .flatMap(_toFieldEntries)
+    .thru(sort(_byDependency))
+    .reduce(_processField, {})
     .value();
   console.log(collections);
 }
@@ -29,12 +29,7 @@ export type SchemaFieldEntry = {
   schemaField: SchemaField;
 };
 
-function toFieldEntries(collectionPair: [string, SchemaCollection]): SchemaFieldEntry[] {
-  const [collectionName, schemaCollection] = collectionPair;
-  return chain(schemaCollection.fields).toPairs().map(curry(toFieldEntry)(collectionName)).value();
-}
-
-function toFieldEntry(
+function _toFieldEntry(
   collectionName: string,
   collectionPairs: [string, SchemaField]
 ): SchemaFieldEntry {
@@ -43,7 +38,14 @@ function toFieldEntry(
   return { id, schemaField };
 }
 
-function byDependency(a: SchemaFieldEntry, b: SchemaFieldEntry): number {
+const toFieldEntryWith = curry(_toFieldEntry);
+
+export function _toFieldEntries(collectionPair: [string, SchemaCollection]): SchemaFieldEntry[] {
+  const [collectionName, schemaCollection] = collectionPair;
+  return chain(schemaCollection.fields).toPairs().map(toFieldEntryWith(collectionName)).value();
+}
+
+export function _byDependency(a: SchemaFieldEntry, b: SchemaFieldEntry): number {
   const aDependencyIds = dependencyIdsOf(a.schemaField);
   const bDependencyIds = dependencyIdsOf(b.schemaField);
   if (find(aDependencyIds, b.id)) return 1;
@@ -51,7 +53,10 @@ function byDependency(a: SchemaFieldEntry, b: SchemaFieldEntry): number {
   return 0;
 }
 
-function processField(collections: Collections, schemaFieldEntry: SchemaFieldEntry): Collections {
+export function _processField(
+  collections: Collections,
+  schemaFieldEntry: SchemaFieldEntry
+): Collections {
   const { id, schemaField } = schemaFieldEntry;
   const { collectionName, fieldName } = id;
 
