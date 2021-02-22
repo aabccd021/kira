@@ -1,4 +1,4 @@
-import { Field, FieldType, SchemaField } from '../field';
+import { Field, SchemaField } from '../field';
 import { Collections, FieldId } from './_util';
 import { _count } from './count';
 import { _integer } from './integer';
@@ -13,7 +13,7 @@ import { _sum } from './sum';
  * Property `type` of a field is required, and must be a camelCase of it's name.
  *
  */
-export function toField(schemaField: SchemaField, collectionMap: Collections): Field {
+export function fieldOf(schemaField: SchemaField, collectionMap: Collections): Field {
   switch (schemaField.fieldType) {
     case 'count':
       return _count.fieldOf(schemaField, collectionMap);
@@ -30,7 +30,7 @@ export function toField(schemaField: SchemaField, collectionMap: Collections): F
   }
 }
 
-export function toSchema(field: Field): SchemaField {
+export function schemaOf(field: Field): SchemaField {
   switch (field.fieldType) {
     case 'count':
       return _count.schemaOf(field);
@@ -47,19 +47,19 @@ export function toSchema(field: Field): SchemaField {
   }
 }
 
-export function getDependencies(fieldType: FieldType): ReadonlyArray<FieldId> {
-  switch (fieldType) {
+export function dependencyIdsOf(schemaField: SchemaField): FieldId[] {
+  switch (schemaField.fieldType) {
     case 'count':
-      return _count.dependency;
+      return _count.dependencyOf(schemaField);
     case 'integer':
-      return _integer.dependency;
+      return _integer.dependencyOf(schemaField);
     case 'reference':
-      return _reference.dependency;
+      return _reference.dependencyOf(schemaField);
     case 'serverTimestamp':
-      return _serverTimestamp.dependency;
+      return _serverTimestamp.dependencyOf(schemaField);
     case 'string':
-      return _string.dependency;
+      return _string.dependencyOf(schemaField);
     case 'sum':
-      return _sum.dependency;
+      return _sum.dependencyOf(schemaField);
   }
 }

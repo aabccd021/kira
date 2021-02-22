@@ -1,15 +1,15 @@
 import { isUndefined } from 'lodash';
 
-import { StringField, StringFieldMigration } from '../field';
+import { StringField, StringSchemaField } from '../field';
 import { FieldProcessor } from './_util';
 
-export const _string: FieldProcessor<StringField, StringFieldMigration> = {
+export const _string: FieldProcessor<StringField, StringSchemaField> = {
   fieldOf,
   schemaOf,
-  dependency: [],
+  dependencyOf: () => [],
 };
 
-function fieldOf(schemaField: StringFieldMigration): StringField {
+function fieldOf(schemaField: StringSchemaField): StringField {
   const { validation } = schemaField;
   const minLengthValue = validation?.minLength?.value;
   const maxLengthValue = validation?.maxLength?.value;
@@ -32,6 +32,6 @@ function fieldOf(schemaField: StringFieldMigration): StringField {
   return schemaField;
 }
 
-function schemaOf(field: StringField): StringFieldMigration {
+function schemaOf(field: StringField): StringSchemaField {
   return field;
 }

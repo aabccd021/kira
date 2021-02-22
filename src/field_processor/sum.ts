@@ -1,15 +1,15 @@
 import { isUndefined } from 'lodash';
 
-import { SumField, SumFieldMigration } from '../field';
+import { SumField, SumSchemaField } from '../field';
 import { Collections, FieldProcessor } from './_util';
 
-export const _sum: FieldProcessor<SumField, SumFieldMigration> = {
+export const _sum: FieldProcessor<SumField, SumSchemaField> = {
   fieldOf,
   schemaOf,
-  dependency: [],
+  dependencyOf: () => [],
 };
 
-function fieldOf(schemaField: SumFieldMigration, collectionMap: Collections): SumField {
+function fieldOf(schemaField: SumSchemaField, collectionMap: Collections): SumField {
   const { referenceCollectionName, referenceFieldName, sumFieldName } = schemaField;
   const referenceCollection = collectionMap[referenceCollectionName];
   const referenceField = referenceCollection?.fields[referenceFieldName];
@@ -34,6 +34,6 @@ function fieldOf(schemaField: SumFieldMigration, collectionMap: Collections): Su
   return { ...schemaField, referenceField, sumField };
 }
 
-function schemaOf(field: SumField): SumFieldMigration {
+function schemaOf(field: SumField): SumSchemaField {
   return field;
 }

@@ -1,15 +1,15 @@
 import { chain, isUndefined, keys } from 'lodash';
 
-import { Field, ReferenceField, ReferenceFieldMigration } from '../field';
+import { Field, ReferenceField, ReferenceSchemaField } from '../field';
 import { Collections, FieldProcessor } from './_util';
 
-export const _reference: FieldProcessor<ReferenceField, ReferenceFieldMigration> = {
+export const _reference: FieldProcessor<ReferenceField, ReferenceSchemaField> = {
   fieldOf,
   schemaOf,
-  dependency: [],
+  dependencyOf: () => [],
 };
 
-function fieldOf(schemaField: ReferenceFieldMigration, collectionMap: Collections): ReferenceField {
+function fieldOf(schemaField: ReferenceSchemaField, collectionMap: Collections): ReferenceField {
   const { referenceCollectionName, referenceSyncedFields } = schemaField;
   const referenceCollection = collectionMap[referenceCollectionName];
 
@@ -27,7 +27,7 @@ function toSyncedFields(referenceField: Field | undefined): Exclude<Field, Refer
   return referenceField;
 }
 
-function schemaOf(field: ReferenceField): ReferenceFieldMigration {
+function schemaOf(field: ReferenceField): ReferenceSchemaField {
   const { referenceSyncedFields } = field;
   return { ...field, referenceSyncedFields: keys(referenceSyncedFields) };
 }

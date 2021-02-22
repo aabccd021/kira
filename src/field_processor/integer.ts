@@ -1,15 +1,15 @@
 import { isUndefined } from 'lodash';
 
-import { IntegerField, IntegerFieldMigration } from '../field';
+import { IntegerField, IntegerSchemaField } from '../field';
 import { FieldProcessor } from './_util';
 
-export const _integer: FieldProcessor<IntegerField, IntegerFieldMigration> = {
+export const _integer: FieldProcessor<IntegerField, IntegerSchemaField> = {
   fieldOf,
   schemaOf,
-  dependency: [],
+  dependencyOf: () => [],
 };
 
-function fieldOf(schemaField: IntegerFieldMigration): IntegerField {
+function fieldOf(schemaField: IntegerSchemaField): IntegerField {
   const { validation } = schemaField;
   const minValue = validation?.min?.value;
   const maxValue = validation?.max?.value;
@@ -19,6 +19,6 @@ function fieldOf(schemaField: IntegerFieldMigration): IntegerField {
   return schemaField;
 }
 
-function schemaOf(field: IntegerField): IntegerFieldMigration {
+function schemaOf(field: IntegerField): IntegerSchemaField {
   return field;
 }

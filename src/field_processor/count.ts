@@ -1,15 +1,15 @@
 import { isUndefined } from 'lodash';
 
-import { CountField, CountFieldMigration } from '../field';
+import { CountField, CountSchemaField } from '../field';
 import { Collections, FieldProcessor } from './_util';
 
-export const _count: FieldProcessor<CountField, CountFieldMigration> = {
+export const _count: FieldProcessor<CountField, CountSchemaField> = {
   fieldOf,
   schemaOf,
-  dependency: [],
+  dependencyOf: () => [],
 };
 
-function fieldOf(schemaField: CountFieldMigration, collectionMap: Collections): CountField {
+function fieldOf(schemaField: CountSchemaField, collectionMap: Collections): CountField {
   const { referenceCollectionName, referenceFieldName } = schemaField;
   const referenceField = collectionMap[referenceCollectionName]?.fields[referenceFieldName];
   if (isUndefined(referenceField)) {
@@ -24,6 +24,6 @@ function fieldOf(schemaField: CountFieldMigration, collectionMap: Collections): 
   return { ...schemaField, referenceField };
 }
 
-function schemaOf(field: CountField): CountFieldMigration {
+function schemaOf(field: CountField): CountSchemaField {
   return field;
 }

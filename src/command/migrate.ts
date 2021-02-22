@@ -1,102 +1,63 @@
-import stringify from 'json-stable-stringify';
-import { curry, find, isUndefined, keys, map, reduce } from 'lodash';
+import { chain, curry, find } from 'lodash';
 
+import { Field, SchemaField } from '../field';
 import {
   Collection,
   Collections,
   FieldId,
+  Fields,
   SchemaCollection,
-  SchemaCollections,
 } from '../field_processor/_util';
-import { getDependencies, toField } from '../field_processor/mod';
+import { dependencyIdsOf, fieldOf } from '../field_processor/mod';
+import { loadSchemaOnPath } from '../schema';
+import { sort } from '../util';
 
-export async function handleMigrateCommand(): Promise<void> {
-  const schemaPath = './../../example/schema';
-  const schemaFile: { default: unknown } = await import(schemaPath);
-  const schema = schemaFile.default;
-
-  if (!isSchema(schema)) throw Error(`${schemaPath} is not a valid schema`);
-
-  const emptyAccumulator: Accumulator = { validatedFieldIds: [], collections: {} };
-  const collections = reduce(
-    keys(schema.collections),
-    curry(processCollection)(schema.collections),
-    emptyAccumulator
-  );
-
-  console.log(stringify(collections, { space: 2 }));
+export async function migrate(): Promise<void> {
+  const schemaPath = './../example/schema';
+  const schema = await loadSchemaOnPath(schemaPath);
+  const collections = chain(schema.collections)
+    .toPairs()
+    .flatMap(toFieldEntries)
+    .thru(sort(byDependency))
+    .reduce(processField, {})
+    .value();
+  console.log(collections);
 }
 
-/**
- * To Collection
- */
-function processCollection(
-  schemaCollections: SchemaCollections,
-  accumulator: Accumulator,
-  collectionName: string
-): Accumulator {
-  const fieldNames = keys(schemaCollections[collectionName]?.fields);
-  const fieldIds: FieldId[] = map(fieldNames, (fieldName) => ({ fieldName, collectionName }));
-  return reduce(fieldIds, curry(processField)(schemaCollections), accumulator);
+export type SchemaFieldEntry = {
+  id: FieldId;
+  schemaField: SchemaField;
+};
+
+function toFieldEntries(collectionPair: [string, SchemaCollection]): SchemaFieldEntry[] {
+  const [collectionName, schemaCollection] = collectionPair;
+  return chain(schemaCollection.fields).toPairs().map(curry(toFieldEntry)(collectionName)).value();
 }
 
-/**
- * To Field
- */
-function processField(
-  schemaCollections: SchemaCollections,
-  accumulator: Accumulator,
-  fieldId: FieldId
-): Accumulator {
-  const { validatedFieldIds, collections } = accumulator;
-  if (find(validatedFieldIds, fieldId)) return accumulator;
+function toFieldEntry(
+  collectionName: string,
+  collectionPairs: [string, SchemaField]
+): SchemaFieldEntry {
+  const [fieldName, schemaField] = collectionPairs;
+  const id: FieldId = { collectionName, fieldName };
+  return { id, schemaField };
+}
 
-  const { collectionName, fieldName } = fieldId;
+function byDependency(a: SchemaFieldEntry, b: SchemaFieldEntry): number {
+  const aDependencyIds = dependencyIdsOf(a.schemaField);
+  const bDependencyIds = dependencyIdsOf(b.schemaField);
+  if (find(aDependencyIds, b.id)) return 1;
+  if (find(bDependencyIds, a.id)) return -1;
+  return 0;
+}
 
-  const schemaCollection = schemaCollections[collectionName];
-  if (isUndefined(schemaCollection)) throw Error(`${collectionName} not found`);
-
-  const schemaField = schemaCollection.fields[fieldName];
-  if (isUndefined(schemaField)) throw Error(`${collectionName}.${fieldName} not found`);
-
-  const { fieldType } = schemaField;
-
-  const dependency = getDependencies(fieldType);
-  const dependencyAccumulator = reduce(
-    dependency,
-    curry(processField)(schemaCollections),
-    accumulator
-  );
+function processField(collections: Collections, schemaFieldEntry: SchemaFieldEntry): Collections {
+  const { id, schemaField } = schemaFieldEntry;
+  const { collectionName, fieldName } = id;
 
   const collection = collections[collectionName];
-  const fields = collection?.fields;
-  const newField = toField(schemaField, dependencyAccumulator.collections);
-  const newFields = { ...fields, [fieldName]: newField };
+  const newField: Field = fieldOf(schemaField, collections);
+  const newFields: Fields = { ...collection?.fields, [fieldName]: newField };
   const newCollection: Collection = { ...collection, fields: newFields };
-  const newCollections: Collections = { ...collections, [collectionName]: newCollection };
-  const newValidatedFieldIds: FieldId[] = [...dependencyAccumulator.validatedFieldIds, fieldId];
-
-  return {
-    validatedFieldIds: newValidatedFieldIds,
-    collections: newCollections,
-  };
-}
-
-type Accumulator = {
-  validatedFieldIds: FieldId[];
-  collections: Collections;
-};
-
-/**
- * Schema
- */
-const version = '0.1.0';
-
-export type KiraSchema = {
-  version: typeof version;
-  collections: { [collectionName: string]: SchemaCollection };
-};
-
-function isSchema(rawSchema: unknown): rawSchema is KiraSchema {
-  return (rawSchema as KiraSchema).version === version;
+  return { ...collections, [collectionName]: newCollection };
 }

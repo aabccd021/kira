@@ -16,12 +16,12 @@ export type FieldType = 'count' | 'integer' | 'reference' | 'serverTimestamp' | 
  * Schema Field
  */
 export type SchemaField = (
-  | CountFieldMigration
-  | IntegerFieldMigration
-  | ReferenceFieldMigration
-  | ServerTimestampFieldMigration
-  | StringFieldMigration
-  | SumFieldMigration
+  | CountSchemaField
+  | IntegerSchemaField
+  | ReferenceSchemaField
+  | ServerTimestampSchemaField
+  | StringSchemaField
+  | SumSchemaField
 ) & { fieldType: FieldType };
 
 /**
@@ -40,7 +40,7 @@ export type Field = (
  * Sum Field
  * Sum value of certain field of document which refers to this document
  */
-export type SumFieldMigration = {
+export type SumSchemaField = {
   /** @ignore */
   fieldType: 'sum';
   /**
@@ -56,7 +56,7 @@ export type SumFieldMigration = {
   /** Name of field to be summed. The field must be {@link IntegerField}. */
   sumFieldName: string;
 };
-export type SumField = SumFieldMigration & {
+export type SumField = SumSchemaField & {
   referenceField: ReferenceField;
   sumField: IntegerField;
 };
@@ -64,7 +64,7 @@ export type SumField = SumFieldMigration & {
 /**
  * Count
  */
-export type CountFieldMigration = {
+export type CountSchemaField = {
   /** @ignore */
   fieldType: 'count';
   /**
@@ -78,14 +78,14 @@ export type CountFieldMigration = {
    */
   referenceFieldName: string;
 };
-export type CountField = CountFieldMigration & {
+export type CountField = CountSchemaField & {
   referenceField: ReferenceField;
 };
 
 /**
  * Reference
  */
-export type ReferenceFieldMigration = {
+export type ReferenceSchemaField = {
   /** @ignore */
   fieldType: 'reference';
   /** Name of collection of referenced document. */
@@ -93,26 +93,26 @@ export type ReferenceFieldMigration = {
   /** Name of fields to be synced. */
   referenceSyncedFields: Array<string>;
 };
-export type ReferenceField = Omit<ReferenceFieldMigration, 'referenceSyncedFields'> & {
+export type ReferenceField = Omit<ReferenceSchemaField, 'referenceSyncedFields'> & {
   referenceSyncedFields: { [fieldName: string]: Exclude<Field, ReferenceField> };
 };
 
 /**
  * Server Timestamp
  */
-export type ServerTimestampField = ServerTimestampFieldMigration;
-export type ServerTimestampFieldMigration = {
+export type ServerTimestampField = ServerTimestampSchemaField;
+export type ServerTimestampSchemaField = {
   fieldType: 'serverTimestamp';
 };
 
 /**
  * String
  */
-export type StringFieldMigration = {
+export type StringSchemaField = {
   /** @ignore */
   fieldType: 'string';
   /** `isUnique`: value of this string field will be unique across collections. */
-  properties?: ReadonlyArray<'isUnique'>;
+  properties?: 'isUnique'[];
   validation?: {
     /** Minimum length of this string, inclusive. */
     minLength?: Validation<integer>;
@@ -120,12 +120,12 @@ export type StringFieldMigration = {
     maxLength?: Validation<integer>;
   };
 };
-export type StringField = StringFieldMigration;
+export type StringField = StringSchemaField;
 
 /**
  * Integer
  */
-export type IntegerFieldMigration = {
+export type IntegerSchemaField = {
   /** @ignore */
   fieldType: 'integer';
   validation?: {
@@ -135,4 +135,4 @@ export type IntegerFieldMigration = {
     max?: Validation<integer>;
   };
 };
-export type IntegerField = IntegerFieldMigration;
+export type IntegerField = IntegerSchemaField;
