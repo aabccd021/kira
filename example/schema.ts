@@ -8,7 +8,7 @@ const schema: KiraSchema = {
         refXA: {
           fieldType: 'reference',
           referenceCollectionName: 'colY',
-          referenceSyncedFields: ['refYB'],
+          referenceSyncedFieldNames: ['refYB'],
         },
       },
     },
@@ -17,7 +17,7 @@ const schema: KiraSchema = {
         refYB: {
           fieldType: 'reference',
           referenceCollectionName: 'colX',
-          referenceSyncedFields: ['refXA'],
+          referenceSyncedFieldNames: ['refXA'],
         },
       },
     },

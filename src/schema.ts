@@ -1,4 +1,5 @@
-import { SchemaCollection } from './field_processor/_util';
+import { SchemaCollection } from './util';
+
 const version = '0.1.0';
 
 export type KiraSchema = {
