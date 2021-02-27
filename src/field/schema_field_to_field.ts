@@ -1,4 +1,4 @@
-import { chain, find, isUndefined } from 'lodash';
+import { chain, isEqual, isUndefined, map, some } from 'lodash';
 
 import { FieldId, SchemaCollections } from '../util';
 import {
@@ -24,12 +24,13 @@ export function schemaFieldToField(
   trace: FieldId[],
   id: FieldId
 ): Field {
-  if (find(trace, id)) throw Error('Cicular Dependency Detected');
+  const traceIncludesId = some(trace, (_id) => isEqual(_id, id));
+  if (traceIncludesId) throw Error(`Circular dependency detected ${map(trace, (t) => `{${t}}`)}`);
 
-  const { collectionName, fieldName } = id;
+  const [collectionName, fieldName] = id;
   const schemaField = collections[collectionName]?.fields[fieldName];
 
-  if (isUndefined(schemaField)) throw Error(`Field ${collectionName}.${fieldName} doen't exists`);
+  if (isUndefined(schemaField)) throw Error(`Field ${collectionName}.${fieldName} does not exists`);
 
   const newTrace = [...trace, id];
   const fieldGetter: FieldGetter = (_id: FieldId) => schemaFieldToField(collections, newTrace, _id);
@@ -57,10 +58,7 @@ type FieldGetter = (fieldId: FieldId) => Field;
  */
 function countFieldOf(schemaField: CountSchemaField, fieldOfId: FieldGetter): CountField {
   const { referenceCollectionName, referenceFieldName } = schemaField;
-  const referenceField = fieldOfId({
-    collectionName: referenceCollectionName,
-    fieldName: referenceFieldName,
-  });
+  const referenceField = fieldOfId([referenceCollectionName, referenceFieldName]);
   if (isUndefined(referenceField)) {
     throw Error(
       `Referenced field ${referenceFieldName} does not exists on collection ${referenceCollectionName}`
@@ -79,11 +77,14 @@ function countFieldOf(schemaField: CountSchemaField, fieldOfId: FieldGetter): Co
  */
 function integerFieldOf(schemaField: IntegerSchemaField, _: FieldGetter): IntegerField {
   const { validation } = schemaField;
+
   const minValue = validation?.min?.value;
   const maxValue = validation?.max?.value;
+
   if (!isUndefined(minValue) && !isUndefined(maxValue) && maxValue < minValue) {
     throw Error('max must be greater than min');
   }
+
   return schemaField;
 }
 
@@ -94,7 +95,7 @@ function referenceFieldOf(schemaField: ReferenceSchemaField, toField: FieldGette
   const { referenceCollectionName, referenceSyncedFieldNames } = schemaField;
 
   const referenceSyncedFields = chain(referenceSyncedFieldNames)
-    .map<FieldId>((fieldName) => ({ collectionName: referenceCollectionName, fieldName }))
+    .map<FieldId>((fieldName) => [referenceCollectionName, fieldName])
     .map(toField)
     .mapValues(toSyncedFields)
     .value();
@@ -108,6 +109,9 @@ function toSyncedFields(referenceField: Field | undefined): Exclude<Field, Refer
   return referenceField;
 }
 
+/**
+ * ServerTimestamp
+ */
 function serverTimestampFieldOf(
   schemaField: ServerTimestampSchemaField,
   _: FieldGetter
@@ -130,9 +134,11 @@ function stringFieldOf(schemaField: StringSchemaField, _: FieldGetter): StringFi
       throw Error(`minLength must be greater than 0, given ${minLengthValue}`);
     }
   }
+
   if (!isUndefined(maxLengthValue) && maxLengthValue <= 0) {
     throw Error(`max must be greater than 0, given ${maxLengthValue}`);
   }
+
   if (
     !isUndefined(minLengthValue) &&
     !isUndefined(maxLengthValue) &&
@@ -150,14 +156,8 @@ function stringFieldOf(schemaField: StringSchemaField, _: FieldGetter): StringFi
 function sumFieldOf(schemaField: SumSchemaField, fieldOfId: FieldGetter): SumField {
   const { referenceCollectionName, referenceFieldName, sumFieldName } = schemaField;
 
-  const referenceField = fieldOfId({
-    collectionName: referenceCollectionName,
-    fieldName: referenceFieldName,
-  });
-  const sumField = fieldOfId({
-    collectionName: referenceCollectionName,
-    fieldName: sumFieldName,
-  });
+  const referenceField = fieldOfId([referenceCollectionName, referenceFieldName]);
+  const sumField = fieldOfId([referenceCollectionName, sumFieldName]);
 
   if (referenceField.fieldType !== 'reference') {
     throw Error(`Referenced field ${referenceFieldName} is not ReferenceField`);

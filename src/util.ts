@@ -19,7 +19,4 @@ export type SchemaCollections = { [name: string]: SchemaCollection };
 export type SchemaCollection = { fields: SchemaFields };
 export type SchemaFields = { [name: string]: SchemaField };
 
-export type FieldId = {
-  collectionName: string;
-  fieldName: string;
-};
+export type FieldId = [string, string];

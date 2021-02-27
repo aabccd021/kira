@@ -20,7 +20,7 @@ export function _toFieldIds(collectionPair: [string, SchemaCollection]): FieldId
   const [collectionName, collection] = collectionPair;
   return chain(collection.fields)
     .keys()
-    .map((fieldName) => ({ fieldName, collectionName }))
+    .map<FieldId>((fieldName) => [collectionName, fieldName])
     .value();
 }
 
