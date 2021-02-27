@@ -1,4 +1,4 @@
-import { chain, curry, find } from 'lodash';
+import { chain, curry, find, forEach, isEmpty, isEqual, isUndefined } from 'lodash';
 
 import { Field, SchemaField } from '../field';
 import {
@@ -18,6 +18,7 @@ export async function migrate(): Promise<void> {
   const collections = chain(schema.collections)
     .toPairs()
     .flatMap(_toFieldEntries)
+    .thru(_assertNoCircularDependency)
     .thru(sort(_byDependency))
     .reduce(_processField, {})
     .value();
@@ -29,7 +30,59 @@ export type SchemaFieldEntry = {
   schemaField: SchemaField;
 };
 
-function _toFieldEntry(
+/**
+ * With Id
+ */
+function __withId(a: FieldId, b: SchemaFieldEntry): boolean {
+  return isEqual(a, b.id);
+}
+
+const _withId = curry(__withId);
+
+/**
+ * Assert dependency
+ */
+function _assertDepHasNoCircularDependency(
+  entries: SchemaFieldEntry[],
+  idTraces: FieldId[],
+  depId: FieldId
+): void {
+  console.log('y', idTraces);
+  const depEntry: SchemaFieldEntry | undefined = find(entries, _withId(depId));
+  if (isUndefined(depEntry)) throw Error();
+  _assertFieldNoCircularDependency(entries, idTraces, depEntry);
+}
+
+const assertDepHasNoCircularDependency = curry(_assertDepHasNoCircularDependency);
+
+function _assertFieldNoCircularDependency(
+  entries: SchemaFieldEntry[],
+  _idTraces: FieldId[],
+  entry: SchemaFieldEntry
+): void {
+  const idTraces = _idTraces ?? [];
+  const { id, schemaField } = entry;
+  const dependencyIds = dependencyIdsOf(schemaField);
+  if (find(idTraces, id)) {
+    throw Error(`Circular dependency detected: ${JSON.stringify(idTraces, undefined, 2)}`);
+  }
+  const newIdTraces = [...idTraces, id];
+  forEach(dependencyIds, assertDepHasNoCircularDependency(entries)(newIdTraces));
+}
+
+const assertFieldNoCircularDependency = curry(_assertFieldNoCircularDependency);
+
+export function _assertNoCircularDependency(
+  schemaFieldEntries: SchemaFieldEntry[]
+): SchemaFieldEntry[] {
+  forEach(schemaFieldEntries, assertFieldNoCircularDependency(schemaFieldEntries)([]));
+  return schemaFieldEntries;
+}
+
+/**
+ *
+ */
+function toFieldEntry(
   collectionName: string,
   collectionPairs: [string, SchemaField]
 ): SchemaFieldEntry {
@@ -38,21 +91,29 @@ function _toFieldEntry(
   return { id, schemaField };
 }
 
-const toFieldEntryWith = curry(_toFieldEntry);
+const toFieldEntryWith = curry(toFieldEntry);
 
 export function _toFieldEntries(collectionPair: [string, SchemaCollection]): SchemaFieldEntry[] {
   const [collectionName, schemaCollection] = collectionPair;
   return chain(schemaCollection.fields).toPairs().map(toFieldEntryWith(collectionName)).value();
 }
 
+/**
+ * Compare by dependency
+ */
 export function _byDependency(a: SchemaFieldEntry, b: SchemaFieldEntry): number {
   const aDependencyIds = dependencyIdsOf(a.schemaField);
   const bDependencyIds = dependencyIdsOf(b.schemaField);
   if (find(aDependencyIds, b.id)) return 1;
   if (find(bDependencyIds, a.id)) return -1;
+  if (isEmpty(aDependencyIds) && !isEmpty(bDependencyIds)) return 1;
+  if (isEmpty(bDependencyIds) && !isEmpty(aDependencyIds)) return -1;
   return 0;
 }
 
+/**
+ * Process Field
+ */
 export function _processField(
   collections: Collections,
   schemaFieldEntry: SchemaFieldEntry

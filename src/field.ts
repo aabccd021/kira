@@ -91,7 +91,7 @@ export type ReferenceSchemaField = {
   /** Name of collection of referenced document. */
   referenceCollectionName: string;
   /** Name of fields to be synced. */
-  referenceSyncedFields: Array<string>;
+  referenceSyncedFields: string[];
 };
 export type ReferenceField = Omit<ReferenceSchemaField, 'referenceSyncedFields'> & {
   referenceSyncedFields: { [fieldName: string]: Exclude<Field, ReferenceField> };

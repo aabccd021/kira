@@ -1,13 +1,20 @@
-import { chain, isUndefined, keys } from 'lodash';
+import { chain, curry, isUndefined, keys, map } from 'lodash';
 
 import { Field, ReferenceField, ReferenceSchemaField } from '../field';
-import { Collections, FieldProcessor } from './_util';
+import { Collections, FieldId, FieldProcessor } from './_util';
 
 export const _reference: FieldProcessor<ReferenceField, ReferenceSchemaField> = {
   fieldOf,
   schemaOf,
-  dependencyOf: () => [],
+  dependencyOf: ({ referenceSyncedFields, referenceCollectionName }) =>
+    map(referenceSyncedFields, toDependency(referenceCollectionName)),
 };
+
+function _toDependency(collectionName: string, fieldName: string): FieldId {
+  return { fieldName, collectionName };
+}
+
+const toDependency = curry(_toDependency);
 
 function fieldOf(schemaField: ReferenceSchemaField, collectionMap: Collections): ReferenceField {
   const { referenceCollectionName, referenceSyncedFields } = schemaField;

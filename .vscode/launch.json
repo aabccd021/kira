@@ -13,6 +13,10 @@
         "${workspaceFolder}/src/cli.ts",
         "migrate"
       ],
+      "skipFiles": [
+        "${workspaceFolder}/node_modules/**",
+        "<node_internals>/**"
+      ]
     },
     {
       "type": "pwa-node",
