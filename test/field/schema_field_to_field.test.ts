@@ -57,7 +57,7 @@ describe('schema_field_to_field', function () {
   });
 
   describe('integerFieldOf', function () {
-    it('throw error max smaller than min', async function () {
+    it('throw error if max smaller than min', async function () {
       // given
       const schemaCollections: SchemaCollections = {
         user: {
@@ -125,10 +125,104 @@ describe('schema_field_to_field', function () {
       const id: FieldId = ['user', 'createdOn'];
 
       // when
-      const integerField = schemaFieldToField(schemaCollections, [], id);
+      const serverTimestampField = schemaFieldToField(schemaCollections, [], id);
 
       // then
-      expect(integerField).to.deep.equal({ fieldType: 'serverTimestamp' });
+      expect(serverTimestampField).to.deep.equal({ fieldType: 'serverTimestamp' });
+    });
+  });
+
+  describe('stringFieldOf', function () {
+    it('returns correct field from schema', async function () {
+      // given
+      const schemaCollections: SchemaCollections = {
+        user: {
+          fields: {
+            createdOn: {
+              fieldType: 'string',
+              validation: {
+                minLength: { value: 2 },
+                maxLength: { value: 8 },
+              },
+            },
+          },
+        },
+      };
+      const id: FieldId = ['user', 'createdOn'];
+
+      // when
+      const stringField = schemaFieldToField(schemaCollections, [], id);
+
+      // then
+      expect(stringField).to.deep.equal({
+        fieldType: 'string',
+        validation: {
+          minLength: { value: 2 },
+          maxLength: { value: 8 },
+        },
+      });
+    });
+
+    it('throw error if minLength smaller than 0', async function () {
+      // given
+      const schemaCollections: SchemaCollections = {
+        user: {
+          fields: {
+            age: {
+              fieldType: 'string',
+              validation: { minLength: { value: -3 } },
+            },
+          },
+        },
+      };
+      const id: FieldId = ['user', 'age'];
+
+      expect(() => schemaFieldToField(schemaCollections, [], id)).to.throw(
+        Error,
+        'minLength must be greater than 0'
+      );
+    });
+
+    it('throw error if maxLength smaller than 0', async function () {
+      // given
+      const schemaCollections: SchemaCollections = {
+        user: {
+          fields: {
+            age: {
+              fieldType: 'string',
+              validation: { maxLength: { value: -5 } },
+            },
+          },
+        },
+      };
+      const id: FieldId = ['user', 'age'];
+
+      expect(() => schemaFieldToField(schemaCollections, [], id)).to.throw(
+        Error,
+        'maxLength must be greater than 0'
+      );
+    });
+    it('throw error if maxLength smaller than minLength', async function () {
+      // given
+      const schemaCollections: SchemaCollections = {
+        user: {
+          fields: {
+            age: {
+              fieldType: 'string',
+              validation: {
+                minLength: { value: 5 },
+                maxLength: { value: 3 },
+              },
+            },
+          },
+        },
+      };
+      const id: FieldId = ['user', 'age'];
+
+      expect(() => schemaFieldToField(schemaCollections, [], id)).to.throw(
+        Error,
+        'maxLength must be greater than minLength'
+      );
     });
   });
 });

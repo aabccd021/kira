@@ -128,15 +128,12 @@ function stringFieldOf(schemaField: StringSchemaField, _: FieldGetter): StringFi
   const minLengthValue = validation?.minLength?.value;
   const maxLengthValue = validation?.maxLength?.value;
 
-  if (!isUndefined(minLengthValue)) {
-    if (minLengthValue === 0) throw Error('minLength 0 does not need to be specified');
-    if (minLengthValue < 0) {
-      throw Error(`minLength must be greater than 0, given ${minLengthValue}`);
-    }
+  if (!isUndefined(minLengthValue) && minLengthValue < 0) {
+    throw Error('minLength must be greater than 0');
   }
 
   if (!isUndefined(maxLengthValue) && maxLengthValue <= 0) {
-    throw Error(`max must be greater than 0, given ${maxLengthValue}`);
+    throw Error(`maxLength must be greater than 0`);
   }
 
   if (
@@ -144,7 +141,7 @@ function stringFieldOf(schemaField: StringSchemaField, _: FieldGetter): StringFi
     !isUndefined(maxLengthValue) &&
     maxLengthValue < minLengthValue
   ) {
-    throw Error(`maxLength must be greater than minLength`);
+    throw Error('maxLength must be greater than minLength');
   }
 
   return schemaField;
