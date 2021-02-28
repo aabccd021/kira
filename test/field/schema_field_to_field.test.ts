@@ -70,13 +70,7 @@ describe('schema_field_to_field', function () {
             },
           },
         },
-        tweet: {
-          fields: {
-            user: {
-              fieldType: 'string',
-            },
-          },
-        },
+        tweet: { fields: { user: { fieldType: 'string' } } },
       };
       const id: FieldId = ['user', 'tweetCount'];
 
@@ -149,7 +143,7 @@ describe('schema_field_to_field', function () {
         referenceField: {
           fieldType: 'reference',
           referenceCollectionName: 'user',
-          referenceSyncedFields: {},
+          referenceSyncedFields: [],
         },
       });
     });
@@ -162,10 +156,7 @@ describe('schema_field_to_field', function () {
           fields: {
             age: {
               fieldType: 'integer',
-              validation: {
-                min: { value: 5 },
-                max: { value: 3 },
-              },
+              validation: { min: { value: 5 }, max: { value: 3 } },
             },
           },
         },
@@ -185,10 +176,7 @@ describe('schema_field_to_field', function () {
           fields: {
             age: {
               fieldType: 'integer',
-              validation: {
-                min: { value: 4 },
-                max: { value: 9 },
-              },
+              validation: { min: { value: 4 }, max: { value: 9 } },
             },
           },
         },
@@ -201,11 +189,63 @@ describe('schema_field_to_field', function () {
       // then
       expect(integerField).to.deep.equal({
         fieldType: 'integer',
-        validation: {
-          min: { value: 4 },
-          max: { value: 9 },
-        },
+        validation: { min: { value: 4 }, max: { value: 9 } },
       });
+    });
+  });
+
+  describe('referenceFieldOf', function () {
+    it('returns correct field from schema', async function () {
+      // given
+      const schemaCollections: SchemaCollections = {
+        user: { fields: { userName: { fieldType: 'string' } } },
+        tweet: {
+          fields: {
+            owner: {
+              fieldType: 'reference',
+              referenceCollectionName: 'user',
+              referenceSyncedFieldNames: ['userName'],
+            },
+          },
+        },
+      };
+      const id: FieldId = ['tweet', 'owner'];
+
+      // when
+      const serverTimestampField = schemaFieldToField(schemaCollections, [], id);
+
+      // then
+      expect(serverTimestampField).to.deep.equal({
+        fieldType: 'reference',
+        referenceCollectionName: 'user',
+        referenceSyncedFields: [{ fieldName: 'userName', field: { fieldType: 'string' } }],
+      });
+    });
+
+    it('throw error if synced field is reference field', async function () {
+      // given
+      const schemaCollections: SchemaCollections = {
+        user: { fields: {} },
+        kira: { fields: { masumoto: { fieldType: 'reference', referenceCollectionName: 'kira' } } },
+        tweet: {
+          fields: {
+            owner: {
+              fieldType: 'reference',
+              referenceCollectionName: 'kira',
+              referenceSyncedFieldNames: ['masumoto'],
+            },
+          },
+        },
+      };
+      const id: FieldId = ['tweet', 'owner'];
+
+      // when
+
+      // then
+      expect(() => schemaFieldToField(schemaCollections, [], id)).to.throw(
+        Error,
+        '"reference" field kira.masumoto not allowed on syncedFields'
+      );
     });
   });
 
@@ -213,13 +253,7 @@ describe('schema_field_to_field', function () {
     it('returns correct field from schema', async function () {
       // given
       const schemaCollections: SchemaCollections = {
-        user: {
-          fields: {
-            createdOn: {
-              fieldType: 'serverTimestamp',
-            },
-          },
-        },
+        user: { fields: { createdOn: { fieldType: 'serverTimestamp' } } },
       };
       const id: FieldId = ['user', 'createdOn'];
 
@@ -346,9 +380,7 @@ describe('schema_field_to_field', function () {
               fieldType: 'reference',
               referenceCollectionName: 'user',
             },
-            value: {
-              fieldType: 'integer',
-            },
+            value: { fieldType: 'integer' },
           },
         },
       };
@@ -366,11 +398,9 @@ describe('schema_field_to_field', function () {
         referenceField: {
           fieldType: 'reference',
           referenceCollectionName: 'user',
-          referenceSyncedFields: {},
+          referenceSyncedFields: [],
         },
-        sumField: {
-          fieldType: 'integer',
-        },
+        sumField: { fieldType: 'integer' },
       });
     });
 
@@ -389,12 +419,8 @@ describe('schema_field_to_field', function () {
         },
         like: {
           fields: {
-            owner: {
-              fieldType: 'integer',
-            },
-            value: {
-              fieldType: 'integer',
-            },
+            owner: { fieldType: 'integer' },
+            value: { fieldType: 'integer' },
           },
         },
       };
@@ -426,9 +452,7 @@ describe('schema_field_to_field', function () {
               fieldType: 'reference',
               referenceCollectionName: 'tweet',
             },
-            value: {
-              fieldType: 'integer',
-            },
+            value: { fieldType: 'integer' },
           },
         },
       };
@@ -460,9 +484,7 @@ describe('schema_field_to_field', function () {
               fieldType: 'reference',
               referenceCollectionName: 'user',
             },
-            value: {
-              fieldType: 'string',
-            },
+            value: { fieldType: 'string' },
           },
         },
       };

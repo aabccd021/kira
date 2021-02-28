@@ -13,8 +13,8 @@ export type SumField = {
   fieldType: 'sum';
   referenceCollectionName: string;
   referenceFieldName: string;
-  sumFieldName: string;
   referenceField: ReferenceField;
+  sumFieldName: string;
   sumField: IntegerField;
 };
 
@@ -34,7 +34,8 @@ export type ReferenceField = {
   referenceSyncedFields: ReferenceSyncedFields;
 };
 
-export type ReferenceSyncedFields = { [fieldName: string]: Exclude<Field, ReferenceField> };
+export type ReferenceSyncedField = Exclude<Field, ReferenceField>;
+export type ReferenceSyncedFields = { fieldName: string; field: ReferenceSyncedField }[];
 
 /**
  * Server Timestamp

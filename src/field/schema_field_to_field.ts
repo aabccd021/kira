@@ -1,4 +1,4 @@
-import { chain, isEqual, isUndefined, map, some } from 'lodash';
+import { curry, isEqual, isUndefined, map, some } from 'lodash';
 
 import { FieldId, SchemaCollections } from '../util';
 import {
@@ -6,6 +6,7 @@ import {
   Field,
   IntegerField,
   ReferenceField,
+  ReferenceSyncedField,
   ReferenceSyncedFields,
   ServerTimestampField,
   StringField,
@@ -73,7 +74,7 @@ function countFieldOf(
   if (referenceField.referenceCollectionName !== collectionName) {
     throw Error(`Invalid referenced collection`);
   }
-  return { ...schemaField, referenceField };
+  return { fieldType: 'count', referenceCollectionName, referenceFieldName, referenceField };
 }
 
 /**
@@ -95,22 +96,34 @@ function integerFieldOf(schemaField: IntegerSchemaField): IntegerField {
 /**
  * Reference
  */
-function referenceFieldOf(schemaField: ReferenceSchemaField, toField: FieldGetter): ReferenceField {
+function referenceFieldOf(
+  schemaField: ReferenceSchemaField,
+  fieldOfId: FieldGetter
+): ReferenceField {
   const { referenceCollectionName, referenceSyncedFieldNames } = schemaField;
 
-  const referenceSyncedFields: ReferenceSyncedFields = chain(referenceSyncedFieldNames)
-    .map<FieldId>((fieldName) => [referenceCollectionName, fieldName])
-    .map(toField)
-    .mapValues(toSyncedFields)
-    .value();
+  const referenceSyncedFields: ReferenceSyncedFields = map(
+    referenceSyncedFieldNames,
+    toSyncedFieldWith(referenceCollectionName, fieldOfId)
+  );
 
-  return { ...schemaField, referenceSyncedFields };
+  return { fieldType: 'reference', referenceSyncedFields, referenceCollectionName };
 }
 
-function toSyncedFields(referenceField: Field | undefined): Exclude<Field, ReferenceField> {
-  if (isUndefined(referenceField)) throw Error(`Does not exists`);
-  if (referenceField.fieldType === 'reference') throw Error(`ReferenceField not allowed`);
-  return referenceField;
+const toSyncedFieldWith = curry(_toSyncedField);
+
+function _toSyncedField(
+  referenceCollectionName: string,
+  fieldOfId: FieldGetter,
+  referenceFieldName: string
+): { fieldName: string; field: ReferenceSyncedField } {
+  const referenceField = fieldOfId([referenceCollectionName, referenceFieldName]);
+  if (referenceField.fieldType === 'reference') {
+    throw Error(
+      `"reference" field ${referenceCollectionName}.${referenceFieldName} not allowed on syncedFields`
+    );
+  }
+  return { fieldName: referenceFieldName, field: referenceField };
 }
 
 /**
@@ -170,5 +183,12 @@ function sumFieldOf(schemaField: SumSchemaField, id: FieldId, fieldOfId: FieldGe
     throw Error(`${referenceCollectionName}.${sumFieldName} is not "integer" field`);
   }
 
-  return { ...schemaField, referenceField, sumField };
+  return {
+    fieldType: 'sum',
+    referenceFieldName,
+    referenceField,
+    referenceCollectionName,
+    sumFieldName,
+    sumField,
+  };
 }

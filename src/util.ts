@@ -1,3 +1,5 @@
+import { reduce } from 'lodash';
+
 import { Field } from './field/field';
 import { SchemaField } from './field/schema_field';
 
@@ -9,6 +11,10 @@ export function sort<T>(comparator: (a: T, b: T) => number): (ts: T[]) => T[] {
   return function _compare(ts: T[]): T[] {
     return [...ts].sort(comparator);
   };
+}
+
+export function toObject<T>(keys: string[], mapper: (key: string) => T): { [key: string]: T } {
+  return reduce(keys, (o, k) => ({ ...o, [k]: mapper(k) }), {});
 }
 
 export type Collections = { [name: string]: Collection };
