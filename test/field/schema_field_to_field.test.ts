@@ -94,10 +94,7 @@ describe('schema_field_to_field', function () {
         },
         tweet: {
           fields: {
-            user: {
-              fieldType: 'reference',
-              referenceCollectionName: 'kiraMasumoto',
-            },
+            user: { fieldType: 'reference', referenceCollectionName: 'kiraMasumoto' },
           },
         },
       };
@@ -123,10 +120,7 @@ describe('schema_field_to_field', function () {
         },
         tweet: {
           fields: {
-            user: {
-              fieldType: 'reference',
-              referenceCollectionName: 'user',
-            },
+            user: { fieldType: 'reference', referenceCollectionName: 'user' },
           },
         },
       };
@@ -273,10 +267,7 @@ describe('schema_field_to_field', function () {
           fields: {
             createdOn: {
               fieldType: 'string',
-              validation: {
-                minLength: { value: 2 },
-                maxLength: { value: 8 },
-              },
+              validation: { minLength: { value: 2 }, maxLength: { value: 8 } },
             },
           },
         },
@@ -289,10 +280,7 @@ describe('schema_field_to_field', function () {
       // then
       expect(stringField).to.deep.equal({
         fieldType: 'string',
-        validation: {
-          minLength: { value: 2 },
-          maxLength: { value: 8 },
-        },
+        validation: { minLength: { value: 2 }, maxLength: { value: 8 } },
       });
     });
 
@@ -343,10 +331,7 @@ describe('schema_field_to_field', function () {
           fields: {
             age: {
               fieldType: 'string',
-              validation: {
-                minLength: { value: 5 },
-                maxLength: { value: 3 },
-              },
+              validation: { minLength: { value: 5 }, maxLength: { value: 3 } },
             },
           },
         },
