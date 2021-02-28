@@ -48,7 +48,7 @@ export function schemaFieldToField(
     case 'string':
       return stringFieldOf(schemaField);
     case 'sum':
-      return sumFieldOf(schemaField, fieldGetter);
+      return sumFieldOf(schemaField, id, fieldGetter);
   }
 }
 
@@ -151,18 +151,23 @@ function stringFieldOf(schemaField: StringSchemaField): StringField {
 /**
  * Sum
  */
-function sumFieldOf(schemaField: SumSchemaField, fieldOfId: FieldGetter): SumField {
+function sumFieldOf(schemaField: SumSchemaField, id: FieldId, fieldOfId: FieldGetter): SumField {
+  const [collectionName] = id;
   const { referenceCollectionName, referenceFieldName, sumFieldName } = schemaField;
 
   const referenceField = fieldOfId([referenceCollectionName, referenceFieldName]);
   const sumField = fieldOfId([referenceCollectionName, sumFieldName]);
 
   if (referenceField.fieldType !== 'reference') {
-    throw Error(`Referenced field ${referenceFieldName} is not ReferenceField`);
+    throw Error(`${referenceFieldName} is not "reference" field`);
+  }
+
+  if (referenceField.referenceCollectionName !== collectionName) {
+    throw Error(`Invalid referenced collection name ${referenceField.referenceCollectionName}`);
   }
 
   if (sumField.fieldType !== 'integer') {
-    throw Error(`Sum field ${sumFieldName} is not Integer Field`);
+    throw Error(`${referenceCollectionName}.${sumFieldName} is not "integer" field`);
   }
 
   return { ...schemaField, referenceField, sumField };

@@ -325,4 +325,154 @@ describe('schema_field_to_field', function () {
       );
     });
   });
+
+  describe('sumFieldof', function () {
+    it('returns correct field from schema', async function () {
+      // given
+      const schemaCollections: SchemaCollections = {
+        user: {
+          fields: {
+            likeSum: {
+              fieldType: 'sum',
+              referenceCollectionName: 'like',
+              referenceFieldName: 'owner',
+              sumFieldName: 'value',
+            },
+          },
+        },
+        like: {
+          fields: {
+            owner: {
+              fieldType: 'reference',
+              referenceCollectionName: 'user',
+            },
+            value: {
+              fieldType: 'integer',
+            },
+          },
+        },
+      };
+      const id: FieldId = ['user', 'likeSum'];
+
+      // when
+      const stringField = schemaFieldToField(schemaCollections, [], id);
+
+      // then
+      expect(stringField).to.deep.equal({
+        fieldType: 'sum',
+        referenceCollectionName: 'like',
+        referenceFieldName: 'owner',
+        sumFieldName: 'value',
+        referenceField: {
+          fieldType: 'reference',
+          referenceCollectionName: 'user',
+          referenceSyncedFields: {},
+        },
+        sumField: {
+          fieldType: 'integer',
+        },
+      });
+    });
+
+    it('throw error if referenced field is not "reference" field', async function () {
+      // given
+      const schemaCollections: SchemaCollections = {
+        user: {
+          fields: {
+            likeSum: {
+              fieldType: 'sum',
+              referenceCollectionName: 'like',
+              referenceFieldName: 'owner',
+              sumFieldName: 'value',
+            },
+          },
+        },
+        like: {
+          fields: {
+            owner: {
+              fieldType: 'integer',
+            },
+            value: {
+              fieldType: 'integer',
+            },
+          },
+        },
+      };
+      const id: FieldId = ['user', 'likeSum'];
+
+      // then
+      expect(() => schemaFieldToField(schemaCollections, [], id)).to.throw(
+        Error,
+        `owner is not "reference" field`
+      );
+    });
+
+    it('throw error if referenced field collection name is incorrect', async function () {
+      // given
+      const schemaCollections: SchemaCollections = {
+        user: {
+          fields: {
+            likeSum: {
+              fieldType: 'sum',
+              referenceCollectionName: 'like',
+              referenceFieldName: 'owner',
+              sumFieldName: 'value',
+            },
+          },
+        },
+        like: {
+          fields: {
+            owner: {
+              fieldType: 'reference',
+              referenceCollectionName: 'tweet',
+            },
+            value: {
+              fieldType: 'integer',
+            },
+          },
+        },
+      };
+      const id: FieldId = ['user', 'likeSum'];
+
+      // then
+      expect(() => schemaFieldToField(schemaCollections, [], id)).to.throw(
+        Error,
+        `Invalid referenced collection name tweet`
+      );
+    });
+
+    it('throw error if summed field is not integer', async function () {
+      // given
+      const schemaCollections: SchemaCollections = {
+        user: {
+          fields: {
+            likeSum: {
+              fieldType: 'sum',
+              referenceCollectionName: 'like',
+              referenceFieldName: 'owner',
+              sumFieldName: 'value',
+            },
+          },
+        },
+        like: {
+          fields: {
+            owner: {
+              fieldType: 'reference',
+              referenceCollectionName: 'user',
+            },
+            value: {
+              fieldType: 'string',
+            },
+          },
+        },
+      };
+      const id: FieldId = ['user', 'likeSum'];
+
+      // then
+      expect(() => schemaFieldToField(schemaCollections, [], id)).to.throw(
+        Error,
+        `like.value is not "integer" field`
+      );
+    });
+  });
 });
