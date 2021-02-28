@@ -25,12 +25,20 @@ export type CountField = {
   referenceField: ReferenceField;
 };
 
+/**
+ * Reference
+ */
 export type ReferenceField = {
   fieldType: 'reference';
   referenceCollectionName: string;
-  referenceSyncedFields: { [fieldName: string]: Exclude<Field, ReferenceField> };
+  referenceSyncedFields: ReferenceSyncedFields;
 };
 
+export type ReferenceSyncedFields = { [fieldName: string]: Exclude<Field, ReferenceField> };
+
+/**
+ * Server Timestamp
+ */
 export type ServerTimestampField = {
   fieldType: 'serverTimestamp';
 };

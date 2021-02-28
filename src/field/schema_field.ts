@@ -44,7 +44,7 @@ export type ReferenceSchemaField = {
   /** Name of collection of referenced document. */
   referenceCollectionName: string;
   /** Name of fields to be synced. */
-  referenceSyncedFieldNames: string[];
+  referenceSyncedFieldNames?: string[];
 };
 
 export type ServerTimestampSchemaField = {

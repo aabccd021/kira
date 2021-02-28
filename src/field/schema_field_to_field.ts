@@ -6,6 +6,7 @@ import {
   Field,
   IntegerField,
   ReferenceField,
+  ReferenceSyncedFields,
   ServerTimestampField,
   StringField,
   SumField,
@@ -37,15 +38,15 @@ export function schemaFieldToField(
 
   switch (schemaField.fieldType) {
     case 'count':
-      return countFieldOf(schemaField, fieldGetter);
+      return countFieldOf(schemaField, id, fieldGetter);
     case 'integer':
-      return integerFieldOf(schemaField, fieldGetter);
+      return integerFieldOf(schemaField);
     case 'reference':
       return referenceFieldOf(schemaField, fieldGetter);
     case 'serverTimestamp':
-      return serverTimestampFieldOf(schemaField, fieldGetter);
+      return serverTimestampFieldOf(schemaField);
     case 'string':
-      return stringFieldOf(schemaField, fieldGetter);
+      return stringFieldOf(schemaField);
     case 'sum':
       return sumFieldOf(schemaField, fieldGetter);
   }
@@ -56,26 +57,29 @@ type FieldGetter = (fieldId: FieldId) => Field;
 /**
  * Count
  */
-function countFieldOf(schemaField: CountSchemaField, fieldOfId: FieldGetter): CountField {
+function countFieldOf(
+  schemaField: CountSchemaField,
+  id: FieldId,
+  fieldOfId: FieldGetter
+): CountField {
+  const [collectionName] = id;
   const { referenceCollectionName, referenceFieldName } = schemaField;
   const referenceField = fieldOfId([referenceCollectionName, referenceFieldName]);
-  if (isUndefined(referenceField)) {
-    throw Error(
-      `Referenced field ${referenceFieldName} does not exists on collection ${referenceCollectionName}`
-    );
-  }
 
   if (referenceField.fieldType !== 'reference') {
-    throw Error(`Referenced field is not ReferenceField`);
+    throw Error('Referenced field is not `reference` field');
   }
 
+  if (referenceField.referenceCollectionName !== collectionName) {
+    throw Error(`Invalid referenced collection`);
+  }
   return { ...schemaField, referenceField };
 }
 
 /**
  * Integer
  */
-function integerFieldOf(schemaField: IntegerSchemaField, _: FieldGetter): IntegerField {
+function integerFieldOf(schemaField: IntegerSchemaField): IntegerField {
   const { validation } = schemaField;
 
   const minValue = validation?.min?.value;
@@ -94,7 +98,7 @@ function integerFieldOf(schemaField: IntegerSchemaField, _: FieldGetter): Intege
 function referenceFieldOf(schemaField: ReferenceSchemaField, toField: FieldGetter): ReferenceField {
   const { referenceCollectionName, referenceSyncedFieldNames } = schemaField;
 
-  const referenceSyncedFields = chain(referenceSyncedFieldNames)
+  const referenceSyncedFields: ReferenceSyncedFields = chain(referenceSyncedFieldNames)
     .map<FieldId>((fieldName) => [referenceCollectionName, fieldName])
     .map(toField)
     .mapValues(toSyncedFields)
@@ -112,17 +116,14 @@ function toSyncedFields(referenceField: Field | undefined): Exclude<Field, Refer
 /**
  * ServerTimestamp
  */
-function serverTimestampFieldOf(
-  schemaField: ServerTimestampSchemaField,
-  _: FieldGetter
-): ServerTimestampField {
+function serverTimestampFieldOf(schemaField: ServerTimestampSchemaField): ServerTimestampField {
   return schemaField;
 }
 
 /**
  * String
  */
-function stringFieldOf(schemaField: StringSchemaField, _: FieldGetter): StringField {
+function stringFieldOf(schemaField: StringSchemaField): StringField {
   const { validation } = schemaField;
 
   const minLengthValue = validation?.minLength?.value;
